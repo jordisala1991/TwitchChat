@@ -1,12 +1,12 @@
 {
   "name": "Irc",
   "version": "0.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "This is an IRC Client",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Jordi",
   "license": "BSD-2-Clause",
   "dependencies": {
     "moment": "~2.5.1"
