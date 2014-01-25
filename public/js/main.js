@@ -20,10 +20,21 @@ $(document).ready(function() {
 
 Twitch.init({clientId: '1uzx8xlados5eqn7sb0pexoyuzkc1g9'}, function(error, status) {
 
+    if (error) {
+        console.log(error);
+    }
+
     $('.twitch-connect').click(function() {
         Twitch.login({
-            scope: ['user_read', 'channel_read']
+            scope: ['chat_login']
         });
     })
+
+    if (status.authenticated) {
+        $('.twitch-connect').hide()
+    }
+
+    var token = Twitch.getToken();
+    console.log(token);
 
 });
