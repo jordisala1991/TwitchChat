@@ -2,7 +2,6 @@ $(document).ready(function() {
     var socket = io.connect(socketUrl);
 
     function addMessage(message) {
-
         var className = 'chat_line';
         if (message.containsBob) {
             className += ' bob';
@@ -19,6 +18,7 @@ $(document).ready(function() {
 
     Twitch.init({clientId: '1uzx8xlados5eqn7sb0pexoyuzkc1g9'}, function(error, status) {
 
+        console.log(status);
         if (error) {
             console.log(error);
         }
@@ -34,6 +34,7 @@ $(document).ready(function() {
         }
         else {
             var token = Twitch.getToken();
+
 
             console.log(Twitch);
         }
