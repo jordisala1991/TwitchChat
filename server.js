@@ -34,7 +34,7 @@ client.addListener('message' + configurations.channelName, irc_functions.channel
 client.addListener('error', irc_functions.errorMessage.bind(irc_functions));
 
 io.sockets.on('connection', function (socket) {
-    var client;
+    var user_client;
     
     socket.on('login', function (data) {
         options = {
@@ -46,9 +46,10 @@ io.sockets.on('connection', function (socket) {
             channels: [ configurations.channelName ],
         }
 
-        client = new irc.Client(configurations.serverAddress, data.username, options);
-        client.say(configurations.channelName, "I'm a bot!");
-
-        socket.emit('message', options);
+        user_client = new irc.Client(configurations.serverAddress, data.username, options);
     });
+
+    socket.on('message_to_send', function(data) {
+        user_client.say(configurations.channelName, data);
+    })
 });

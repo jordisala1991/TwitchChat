@@ -16,6 +16,12 @@ $(document).ready(function() {
         addMessage(data);
     });
 
+    socket.emit('login', {'username': 'jordism91', 'oauth': 'ojliwyrhb9zapkizg6lxg3hajiy7st'});
+
+    $('.send-chat-message').click(function() {
+        socket.emit('message_to_send', $('.chat-input').val());
+    });
+
     Twitch.init({clientId: '1uzx8xlados5eqn7sb0pexoyuzkc1g9'}, function(error, status) {
         if (error) console.log(error);
 
