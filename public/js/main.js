@@ -11,12 +11,25 @@ $(document).ready(function() {
         $('.chat-lines').append(chatLine);
     }
 
+    function sendMessage(message) {
+        if (message != '') {
+            socket.emit('message_to_send', message);
+        }
+        $('.chat-input').val('');
+    }
+
     socket.on('message', function(data) {
         addMessage(data);
     });
 
+    $('.chat-input').keypress(function(e) {
+        if (e.which == 13) {
+            sendMessage($('.chat-input').val());
+        }
+    });
+
     $('.send-chat-message').click(function() {
-        socket.emit('message_to_send', $('.chat-input').val());
+        sendMessage($('.chat-input').val());
     });
 });
 
