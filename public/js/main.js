@@ -24,6 +24,7 @@ $(document).ready(function() {
 
     $('.chat-input').keypress(function(e) {
         if (e.which == 13) {
+            e.preventDefault();
             sendMessage($('.chat-input').val());
         }
     });
@@ -31,24 +32,24 @@ $(document).ready(function() {
     $('.send-chat-message').click(function() {
         sendMessage($('.chat-input').val());
     });
-});
+    
+    Twitch.init({clientId: '1uzx8xlados5eqn7sb0pexoyuzkc1g9'}, function(error, status) {
+        if (error) console.log(error);
 
-Twitch.init({clientId: '1uzx8xlados5eqn7sb0pexoyuzkc1g9'}, function(error, status) {
-    if (error) console.log(error);
+        if (status.authenticated) {
+            var token = Twitch.getToken();
 
-    if (status.authenticated) {
-        var token = Twitch.getToken();
+            var test = Twitch.api({method: 'user'}, function(error, user) {
+                if (error) console.log(error);
+                socket.emit('login', {'username': user.name, 'oauth': token});
+            });
+        }
+        else {
+            $('.twitch-connect').show();
+            $('.twitch-connect').click(function() {
+                Twitch.login({ scope: ['user_read', 'chat_login'] });
+            });
+        }
 
-        var test = Twitch.api({method: 'user'}, function(error, user) {
-            if (error) console.log(error);
-            socket.emit('login', {'username': user.name, 'oauth': token});
-        });
-    }
-    else {
-        $('.twitch-connect').show();
-        $('.twitch-connect').click(function() {
-            Twitch.login({ scope: ['user_read', 'chat_login'] });
-        });
-    }
-
+    });
 });
