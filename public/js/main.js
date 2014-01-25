@@ -22,8 +22,7 @@ $(document).ready(function() {
             console.log(error);
         }
 
-        console.log(status);
-        if (status.authenticaded) {
+        if (status.authenticated) {
             var token = Twitch.getToken();
             var username = '';
 
