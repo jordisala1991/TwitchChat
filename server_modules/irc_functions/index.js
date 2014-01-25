@@ -15,7 +15,8 @@ IrcFunctions.prototype.channelMessage = function(from, text, message) {
         'date': date,
         'color': color,
         'name': from.capitalize(),
-        'message': text
+        'message': text,
+        'containsBob': /bob/i.test(text)
     }
     io.sockets.emit('message', message);
 }

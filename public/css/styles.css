@@ -30,3 +30,11 @@ h1 {
     height: 80%;
     overflow: auto;
 }
+
+.bob {
+    color: green;
+}
+
+.initial {
+    color: #AAA;
+}
