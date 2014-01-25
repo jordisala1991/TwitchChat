@@ -38,3 +38,8 @@ h1 {
 .initial {
     color: #AAA;
 }
+
+.twitch-connect {
+    margin-left: calc(90% - 170px);    
+    right: 0;
+}

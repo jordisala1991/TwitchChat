@@ -17,3 +17,13 @@ $(document).ready(function() {
         addMessage(data);
     });
 });
+
+Twitch.init({clientId: '1uzx8xlados5eqn7sb0pexoyuzkc1g9'}, function(error, status) {
+
+    $('.twitch-connect').click(function() {
+        Twitch.login({
+            scope: ['user_read', 'channel_read']
+        });
+    })
+
+});
