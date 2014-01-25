@@ -50,6 +50,8 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('message_to_send', function(data) {
-        user_client.say(configurations.channelName, data);
+        if (user_client != undefined) {
+            user_client.say(configurations.channelName, data);         
+        }
     })
 });
