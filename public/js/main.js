@@ -6,7 +6,6 @@ $(document).ready(function() {
         if (message.containsBob) {
             className += ' bob';
         }
-
         var chatLine = '<div class="' + className + '">[' + message.date + '] <strong style=\'color: ' + message.color + '\'>&lt;' + message.name + '&gt;</strong> ' + message.message;
 
         $('.content').append(chatLine);
@@ -22,14 +21,11 @@ $(document).ready(function() {
 
         if (status.authenticated) {
             var token = Twitch.getToken();
-            var username;
 
             var test = Twitch.api({method: 'user'}, function(error, user) {
                 if (error) console.log(error);
-                username = user.name;
+                socket.emit('login', {'username': user.name, 'oauth': token});
             });
-            console.log(test);
-            socket.emit('login', {'username': username, 'oauth': token});
         }
         else {
             $('.twitch-connect').show();
