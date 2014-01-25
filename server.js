@@ -38,15 +38,15 @@ io.sockets.on('connection', function (socket) {
     
     socket.on('login', function (data) {
         connectionOptions = {
-            userName: data.name,
-            realName: data.name,
+            userName: data.username,
+            realName: data.username,
             password: 'oauth:' + data.oauth,
             port: configurations.connectionOptions.port,
             debug: configurations.connectionOptions.debug,
             channels: [ configurations.channelName ],
         }
 
-        var client = new irc.Client(configurations.serverAddress, configurations.botName, configurations.connectionOptions);
-        client.say('#yourchannel', "I'm a bot!");
+        client = new irc.Client(configurations.serverAddress, configurations.botName, configurations.connectionOptions);
+        client.say(configurations.channelName, "I'm a bot!");
     });
 });
