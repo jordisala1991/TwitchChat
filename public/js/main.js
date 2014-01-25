@@ -30,6 +30,7 @@ $(document).ready(function() {
             socket.emit('login', {'username': username, 'oauth': token});
         }
         else {
+            $('.twitch-connect').show();
             $('.twitch-connect').click(function() {
                 Twitch.login({
                     scope: ['user_read', 'chat_login']
