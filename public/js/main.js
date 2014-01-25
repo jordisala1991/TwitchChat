@@ -24,10 +24,11 @@ $(document).ready(function() {
             var token = Twitch.getToken();
             var username;
 
-            Twitch.api({method: 'user'}, function(error, user) {
+            var test = Twitch.api({method: 'user'}, function(error, user) {
                 if (error) console.log(error);
                 username = user.name;
             });
+            console.log(test);
             socket.emit('login', {'username': username, 'oauth': token});
         }
         else {
