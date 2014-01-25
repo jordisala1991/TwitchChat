@@ -37,7 +37,7 @@ io.sockets.on('connection', function (socket) {
     var client;
     
     socket.on('login', function (data) {
-        connectionOptions = {
+        options = {
             userName: data.username,
             realName: data.username,
             password: 'oauth:' + data.oauth,
@@ -46,7 +46,7 @@ io.sockets.on('connection', function (socket) {
             channels: [ configurations.channelName ],
         }
 
-        client = new irc.Client(configurations.serverAddress, configurations.botName, configurations.connectionOptions);
+        client = new irc.Client(configurations.serverAddress, data.username, options);
         client.say(configurations.channelName, "I'm a bot!");
     });
 });
