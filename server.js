@@ -19,7 +19,7 @@ app.get('/', function(request, response){
     response.render('index');
 });
 
-server.listen(9999);
+server.listen(process.env.PORT || 5000);
 
 var config = require('./server_modules/configurations');
 var client = new irc.Client(config.serverAddress, config.botName, config.connectionOptions);
