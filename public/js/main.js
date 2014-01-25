@@ -36,8 +36,6 @@ $(document).ready(function() {
             var token = Twitch.getToken();
 
             console.log(Twitch);
-
-            socket.emit('login', {'user': , 'token': token});
         }
     });
 });
