@@ -34,7 +34,19 @@ client.addListener('message' + configurations.channelName, irc_functions.channel
 client.addListener('error', irc_functions.errorMessage.bind(irc_functions));
 
 io.sockets.on('connection', function (socket) {
+    var client;
+    
     socket.on('login', function (data) {
-        console.log(data);
+        connectionOptions = {
+            userName: data.name,
+            realName: data.name,
+            password: 'oauth:' + data.oauth,
+            port: configurations.connectionOptions.port,
+            debug: configurations.connectionOptions.debug,
+            channels: [ configurations.channelName ],
+        }
+
+        var client = new irc.Client(configurations.serverAddress, configurations.botName, configurations.connectionOptions);
+        client.say('#yourchannel', "I'm a bot!");
     });
 });
