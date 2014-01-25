@@ -41,5 +41,5 @@ h1 {
 
 .twitch-connect {
     margin-left: calc(90% - 170px);    
-    display: none;
+    display: none !important;
 }
