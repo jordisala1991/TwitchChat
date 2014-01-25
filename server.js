@@ -48,5 +48,7 @@ io.sockets.on('connection', function (socket) {
 
         client = new irc.Client(configurations.serverAddress, data.username, options);
         client.say(configurations.channelName, "I'm a bot!");
+
+        socket.emit('message', options);
     });
 });
