@@ -17,28 +17,19 @@ $(document).ready(function() {
     });
 
     Twitch.init({clientId: '1uzx8xlados5eqn7sb0pexoyuzkc1g9'}, function(error, status) {
+        if (error) console.log(error);
 
-        if (error) {
-            console.log(error);
-        }
-
-        console.log(status.authenticated)
         if (status.authenticated) {
             var token = Twitch.getToken();
             var username = '';
 
             Twitch.api({method: 'user'}, function(error, user) {
-                if (error) {
-                    console.log(error);
-                }
-
+                if (error) console.log(error);
                 username = user.name;
             });
-
             socket.emit('login', {'username': username, 'oauth': token});
         }
         else {
-            $('.twitch-connect').show();
             $('.twitch-connect').click(function() {
                 Twitch.login({
                     scope: ['user_read', 'chat_login']
