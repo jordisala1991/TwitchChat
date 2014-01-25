@@ -8,7 +8,6 @@
 
 body, html {
     height: 100%;
-    overflow: hidden;
 }
 
 html {
@@ -22,13 +21,12 @@ h1 {
 }
 
 .content {
+    border: 1px solid #999;
     background-color: #333;
-    color: #BBB;
-    padding: 10px;
-    margin: 20px auto;
+    position: relative;
+    margin: 20px auto 0;
     width: 80%;
-    height: 80%;
-    overflow: auto;
+    height: 600px;
 }
 
 .bob {
@@ -40,13 +38,37 @@ h1 {
 }
 
 .twitch-connect {
-    margin-left: calc(90% - 170px);    
+    margin-left: calc(90% - 170px);
+    cursor: pointer;
 }
 
 .chat-input {
-
+    margin: 10px 0 10px 10px;
+    height: 75%;
+    width: 85%;
+    padding: 4px;
+    resize: none;
+    border: 1px solid rgba(0, 0, 0, 0.35);
 }
 
 .send-chat-message {
-    
+    height: 75%;
+    width: 10%;
+    margin: 10px 20px;
+}
+
+.chat-lines {
+    padding: 10px;
+    color: #BBB;
+    overflow: auto;
+    height: 85%
+}
+
+.chat-control {
+    height: 15%;
+    width: 100%;
+    border-top: 1px solid rgba(255, 255, 255, 0.65);
+    position: absolute;
+    bottom: 0;
+    background-color: #e5e5e5;
 }
