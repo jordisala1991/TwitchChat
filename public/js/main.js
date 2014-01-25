@@ -16,25 +16,28 @@ $(document).ready(function() {
     socket.on('message', function(data) {
         addMessage(data);
     });
-});
 
-Twitch.init({clientId: '1uzx8xlados5eqn7sb0pexoyuzkc1g9'}, function(error, status) {
+    Twitch.init({clientId: '1uzx8xlados5eqn7sb0pexoyuzkc1g9'}, function(error, status) {
 
-    if (error) {
-        console.log(error);
-    }
+        if (error) {
+            console.log(error);
+        }
 
-    $('.twitch-connect').click(function() {
-        Twitch.login({
-            scope: ['chat_login']
-        });
-    })
+        $('.twitch-connect').click(function() {
+            Twitch.login({
+                scope: ['chat_login']
+            });
+        })
 
-    if (status.authenticated) {
-        $('.twitch-connect').hide()
-    }
+        if (!status.authenticated) {
+            $('.twitch-connect').show()
+        }
+        else {
+            var token = Twitch.getToken();
 
-    var token = Twitch.getToken();
-    console.log(token);
+            console.log(Twitch);
 
+            socket.emit('login', {'user': , 'token': token});
+        }
+    });
 });
