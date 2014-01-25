@@ -13,6 +13,7 @@ $(document).ready(function() {
     }
 
     socket.on('message', function(data) {
+        console.log(data);
         addMessage(data);
     });
 
