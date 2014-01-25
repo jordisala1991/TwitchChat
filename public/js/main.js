@@ -22,23 +22,29 @@ $(document).ready(function() {
             console.log(error);
         }
 
-        $('.twitch-connect').click(function() {
-            Twitch.login({
-                scope: ['user_read', 'chat_login']
-            });
-        })
 
-        if (!status.authenticated) {
-            $('.twitch-connect').show()
-        }
-        else {
+        if (satus.authenticaded) {
             var token = Twitch.getToken();
+            var username = '';
 
             Twitch.api({method: 'user'}, function(error, user) {
-                console.log(user);
+                if (error) {
+                    console.log(error);
+                }
+
+                username = user.name;
             });
 
-            console.log(Twitch);
+            socket.emit('login', {'username': username, 'oauth': token});
         }
+        else {
+            $('.twitch-connect').show();
+            $('.twitch-connect').click(function() {
+                Twitch.login({
+                    scope: ['user_read', 'chat_login']
+                });
+            });
+        }
+
     });
 });
