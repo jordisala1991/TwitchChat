@@ -1,14 +1,12 @@
 require('../general_functions');
 
-var IrcFunctions = function(io) {
-    this.io = io;
-    this.moment = require('moment');
+var IrcFunctions = function() {
     this.twitchFunctions = require('../twitch_functions').create();
     this.users = [];
 }
 
 IrcFunctions.prototype.channelMessage = function(from, text, message) {
-    var date = this.moment().format('HH:mm');
+    var date = moment().format('HH:mm');
     var color;
     if (this.users[from] !== undefined) color = this.users[from].color;
     color = this.twitchFunctions.getDefaultUserColor(from);
@@ -19,7 +17,7 @@ IrcFunctions.prototype.channelMessage = function(from, text, message) {
         'name': from.capitalize(),
         'message': text
     }
-    this.io.sockets.emit('message', message);
+    io.sockets.emit('message', message);
 }
 
 IrcFunctions.prototype.privateMessage = function(from, text, message) {

@@ -12,6 +12,7 @@ configurations = {
     },
     serverAddress: 'irc.twitch.tv',
     botName: 'NodeJSBot',
+    environment: require('./conf')()
 }
 
 module.exports = configurations;
