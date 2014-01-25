@@ -18,14 +18,13 @@ $(document).ready(function() {
 
     Twitch.init({clientId: '1uzx8xlados5eqn7sb0pexoyuzkc1g9'}, function(error, status) {
 
-        console.log(status);
         if (error) {
             console.log(error);
         }
 
         $('.twitch-connect').click(function() {
             Twitch.login({
-                scope: ['chat_login']
+                scope: ['user_read', 'chat_login']
             });
         })
 
@@ -35,6 +34,9 @@ $(document).ready(function() {
         else {
             var token = Twitch.getToken();
 
+            Twitch.api({method: 'user'}, function(error, user) {
+                console.log(user);
+            });
 
             console.log(Twitch);
         }
