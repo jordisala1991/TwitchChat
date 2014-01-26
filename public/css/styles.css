@@ -70,3 +70,17 @@ h1 {
     bottom: 0;
     background-color: #e5e5e5;
 }
+
+.chat-line a:link {
+    text-decoration: none;
+}
+.chat-line a:visited {
+    text-decoration: none;
+    color: blue;
+}
+.chat-line a:hover {
+    text-decoration: underline;
+}
+.chat-line a:active {
+    text-decoration: none;
+}

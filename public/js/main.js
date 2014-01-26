@@ -15,12 +15,25 @@ $(document).ready(function() {
         box.find('.chat-line').first().remove();
     }
 
+    // TODO: improve link detection
+    // function linkify(inputText) {
+    //     var replacedText, replacePattern1, replacePattern2, replacePattern3;
+
+    //     replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+    //     replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
+
+    //     replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+    //     replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
+
+    //     return replacedText;
+    // }
+
     function addMessage(message) {
-        var className = 'chat_line';
+        var className = 'chat-line';
         if (message.containsBob) {
             className += ' bob';
         }
-        var chatLine = '<div class="' + className + '">[' + message.date + '] <strong style=\'color: ' + message.color + '\'>&lt;' + message.name + '&gt;</strong> ' + message.message;
+        var chatLine = '<div class="' + className + '">[' + message.date + '] <strong style=\'color: ' + message.color + '\'>&lt;' + message.name + '&gt;</strong> ' + message.message + '</div>';
         var chatBox = $('.chat-lines');
         var shouldScroll = scrolledToBottom(chatBox);
 

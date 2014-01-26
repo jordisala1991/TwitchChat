@@ -33,10 +33,10 @@ client.addListener('pm', irc_functions.privateMessage.bind(irc_functions));
 client.addListener('message' + configurations.channelName, irc_functions.channelMessage.bind(irc_functions));
 client.addListener('error', irc_functions.errorMessage.bind(irc_functions));
 
-io.sockets.on('connection', function (socket) {
+io.sockets.on('connection', function(socket) {
     var user_client;
     
-    socket.on('login', function (data) {
+    socket.on('login', function(data) {
         options = {
             userName: data.username,
             realName: data.username,
