@@ -16,11 +16,9 @@ IrcFunctions.prototype.getUserColor = function(user) {
 }
 
 IrcFunctions.prototype.getMessageColor = function(user, message) {
-    var color;
-
+    var color = 'white';
     if (/bob/i.test(message)) color = 'green';
-    else if (user == 'gmanbot') color = 'blue';
-    else color = 'white';
+    if (user == 'gmanbot') color = 'blue';
 
     return color;
 }
