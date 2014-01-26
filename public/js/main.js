@@ -1,6 +1,12 @@
 $(document).ready(function() {
     var socket = io.connect(socketUrl);
 
+    function scrollDownIfAlreadyScrolled(box) {
+        if (box[0].scrollHeight - box.scrollTop() == box.outerHeight()) {
+            box.scrollTop(box.height());
+        }
+    }
+
     function addMessage(message) {
         var className = 'chat_line';
         if (message.containsBob) {
@@ -8,7 +14,10 @@ $(document).ready(function() {
         }
         var chatLine = '<div class="' + className + '">[' + message.date + '] <strong style=\'color: ' + message.color + '\'>&lt;' + message.name + '&gt;</strong> ' + message.message;
 
-        $('.chat-lines').append(chatLine);
+        var chatBox = $('.chat-lines');
+        chatBox.append(chatLine);
+
+        scrollDownIfAlreadyScrolled(chatBox);
     }
 
     function sendMessage(message) {
