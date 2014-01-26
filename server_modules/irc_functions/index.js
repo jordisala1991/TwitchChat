@@ -5,7 +5,6 @@ var IrcFunctions = function() {
     this.users = [];
 }
 
-
 IrcFunctions.prototype.getUserColor = function(user) {
     var color;
     
