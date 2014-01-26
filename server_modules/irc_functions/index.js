@@ -19,6 +19,7 @@ IrcFunctions.prototype.getMessageColor = function(user, message) {
     var color;
 
     if (/bob/i.test(message)) color = 'green';
+    else if (user == 'gmanbot') color = 'blue';
     else color = 'white';
 
     return color;
