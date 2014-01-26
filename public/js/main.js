@@ -1,10 +1,12 @@
 $(document).ready(function() {
     var socket = io.connect(socketUrl);
 
-    function scrollDownIfAlreadyScrolled(box) {
-        if (box[0].scrollHeight - box.scrollTop() == box.outerHeight()) {
-            box.scrollTop(box.height());
-        }
+    function scrolledToBottom(box) {
+        return (box[0].scrollHeight - box.scrollTop() - 15) <= box.outerHeight();
+    }
+
+    function scrollDown(box) {
+        box.scrollTop(box.height());
     }
 
     function addMessage(message) {
@@ -13,11 +15,11 @@ $(document).ready(function() {
             className += ' bob';
         }
         var chatLine = '<div class="' + className + '">[' + message.date + '] <strong style=\'color: ' + message.color + '\'>&lt;' + message.name + '&gt;</strong> ' + message.message;
-
         var chatBox = $('.chat-lines');
-        chatBox.append(chatLine);
+        var shouldScroll = scrolledToBottom(chatBox);
 
-        scrollDownIfAlreadyScrolled(chatBox);
+        chatBox.append(chatLine);
+        if (shouldScroll) scrollDown(chatBox);
     }
 
     function sendMessage(message) {
