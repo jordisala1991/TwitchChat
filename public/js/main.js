@@ -1,5 +1,6 @@
 $(document).ready(function() {
     var socket = io.connect(socketUrl);
+    var messageCount = 1;
 
     function scrolledToBottom(box) {
         return (box[0].scrollHeight - box.scrollTop() - 15) <= box.outerHeight();
@@ -7,6 +8,11 @@ $(document).ready(function() {
 
     function scrollDown(box) {
         box.scrollTop(box[0].scrollHeight);
+    }
+
+    function deleteFirstMessage(box) {
+        --messageCount;
+        box.find('.chat-line').first().remove();
     }
 
     function addMessage(message) {
@@ -19,6 +25,9 @@ $(document).ready(function() {
         var shouldScroll = scrolledToBottom(chatBox);
 
         chatBox.append(chatLine);
+        ++messageCount;
+
+        if (messageCount > 150) deleteFirstMessage(chatBox);
         if (shouldScroll) scrollDown(chatBox);
     }
 
