@@ -6,7 +6,7 @@ $(document).ready(function() {
     }
 
     function scrollDown(box) {
-        box.scrollTop(box.height());
+        box.scrollTop(box[0].scrollHeight);
     }
 
     function addMessage(message) {
