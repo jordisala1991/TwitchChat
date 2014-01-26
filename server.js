@@ -3,7 +3,6 @@ express = require('express');
 http = require('http');
 app = express();
 server = http.createServer(app);
-moment = require('moment');
 io = require('socket.io').listen(server);
 configurations = require('./server_modules/configurations');
 
@@ -25,8 +24,9 @@ app.get('/', function(request, response){
 
 server.listen(process.env.PORT || 5000);
 
-var client = new irc.Client(configurations.serverAddress, configurations.botName, configurations.connectionOptions);
-var irc_functions = require('./server_modules/irc_functions').create();
+var client, irc_functions;
+client = new irc.Client(configurations.serverAddress, configurations.botName, configurations.connectionOptions);
+irc_functions = require('./server_modules/irc_functions').create();
 
 client.send('TWITCHCLIENT');
 client.addListener('pm', irc_functions.privateMessage.bind(irc_functions));
@@ -50,7 +50,7 @@ io.sockets.on('connection', function(socket) {
     });
 
     socket.on('message_to_send', function(data) {
-        if (user_client != undefined) {
+        if (user_client !== undefined) {
             user_client.say(configurations.channelName, data);         
         }
     })

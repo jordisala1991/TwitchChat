@@ -25,12 +25,16 @@ h1 {
     height: 600px;
 }
 
-.bob {
-    color: green;
-}
-
 .initial {
     color: #AAA;
+}
+
+.white {
+    color: #BBB;
+}
+
+.green {
+    color: green;
 }
 
 .twitch-connect {
@@ -57,7 +61,6 @@ h1 {
 
 .chat-lines {
     padding: 10px;
-    color: #BBB;
     overflow: auto;
     height: 85%
 }

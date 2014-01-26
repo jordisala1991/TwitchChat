@@ -29,14 +29,12 @@ $(document).ready(function() {
     // }
 
     function addMessage(message) {
-        var className = 'chat-line';
-        if (message.containsBob) {
-            className += ' bob';
-        }
-        var chatLine = '<div class="' + className + '">[' + message.date + '] <strong style=\'color: ' + message.color + '\'>&lt;' + message.name + '&gt;</strong> ' + message.message + '</div>';
-        var chatBox = $('.chat-lines');
-        var shouldScroll = scrolledToBottom(chatBox);
+        var messageDate, chatLine, chatBox, shouldScroll;
 
+        messageDate = moment().format('HH:mm');
+        chatLine = '<div class="chat-line ' + message.messageColor + '">[' + messageDate + '] <strong style=\'color: ' + message.userColor + '\'>&lt;' + message.user + '&gt;</strong> ' + message.message + '</div>';
+        chatBox = $('.chat-lines');
+        shouldScroll = scrolledToBottom(chatBox);
         chatBox.append(chatLine);
         ++messageCount;
 
@@ -72,7 +70,7 @@ $(document).ready(function() {
         if (status.authenticated) {
             var token = Twitch.getToken();
 
-            var test = Twitch.api({method: 'user'}, function(error, user) {
+            Twitch.api({method: 'user'}, function(error, user) {
                 if (error) console.log(error);
                 socket.emit('login', {'username': user.name, 'oauth': token});
             });
