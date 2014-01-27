@@ -1,4 +1,4 @@
-var channel = '#guardsmanbob';
+var channel = '#jordism91';
 
 configurations = {
     channelName: channel,
