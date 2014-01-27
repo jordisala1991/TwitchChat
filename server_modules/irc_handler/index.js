@@ -1,20 +1,20 @@
 require('../general_functions');
 
-var IrcFunctions = function() {
-    this.twitchFunctions = require('../twitch_functions').create();
+var IrcHandler = function() {
+    this.twitch = require('../twitch').create();
     this.users = [];
 }
 
-IrcFunctions.prototype.getUserColor = function(user) {
+IrcHandler.prototype.getUserColor = function(user) {
     var color;
     
     if (this.users[user] !== undefined) color = this.users[user].userColor;
-    else color = this.twitchFunctions.getDefaultUserColor(user);
+    else color = this.twitch.getDefaultUserColor(user);
 
     return color;
 }
 
-IrcFunctions.prototype.getMessageColor = function(user, message) {
+IrcHandler.prototype.getMessageColor = function(user, message) {
     var color = 'white';
     if (/bob/i.test(message)) color = 'green';
     if (user == 'gmanbot') color = 'blue';
@@ -22,7 +22,7 @@ IrcFunctions.prototype.getMessageColor = function(user, message) {
     return color;
 }
 
-IrcFunctions.prototype.channelMessage = function(from, text, message) {
+IrcHandler.prototype.channelMessage = function(from, text, message) {
     var date, userColor, messageColor, user;
 
     userColor = this.getUserColor(from);
@@ -38,7 +38,7 @@ IrcFunctions.prototype.channelMessage = function(from, text, message) {
     io.sockets.emit('message', message);
 }
 
-IrcFunctions.prototype.privateMessage = function(from, text, message) {
+IrcHandler.prototype.privateMessage = function(from, text, message) {
     if (from == 'jtv') {
         var parts = text.split(' ');
         if (parts[0] == 'USERCOLOR') {
@@ -49,10 +49,10 @@ IrcFunctions.prototype.privateMessage = function(from, text, message) {
     }
 }
 
-IrcFunctions.prototype.errorMessage = function(message) {
+IrcHandler.prototype.errorMessage = function(message) {
     console.error('ERROR: %s: %s', message.command, message.args.join(' '));
 }
 
 module.exports.create = function() {
-    return new IrcFunctions();
+    return new IrcHandler();
 }
