@@ -10,8 +10,9 @@ IrcHandler.prototype.getUser = function(userName) {
     var user;
     if (this.users[userName] !== undefined) user = this.users[userName];
     else {
-        user = this.userFactory.create(userName.capitalize());
+        user = this.userFactory.create(userName);
         user.userColor = this.twitch.getDefaultUserColor(userName);
+        if (this.twitch.isTheBroadcaster(userName)) user.addUserMode('broadcaster');
         this.users[userName] = user;
     }
 
@@ -19,11 +20,16 @@ IrcHandler.prototype.getUser = function(userName) {
 }
 
 IrcHandler.prototype.getMessageColor = function(user, message) {
-    var color = 'white';
+    var color = 'black';
     if (/bob/i.test(message)) color = 'green';
     if (user == 'gmanbot') color = 'blue';
 
     return color;
+}
+
+IrcHandler.prototype.addModerator = function(userName) {
+    user = this.getUser(userName);
+    user.addUserMode('mod');
 }
 
 IrcHandler.prototype.channelMessage = function(from, text, message) {

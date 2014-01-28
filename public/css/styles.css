@@ -9,7 +9,6 @@
 html {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 13px;
-    line-height: 1.5;
 }
 
 h1 {
@@ -18,7 +17,7 @@ h1 {
 
 .content {
     border: 1px solid #999;
-    background-color: #333;
+    background-color: #f1f1f1;
     position: relative;
     margin: 20px auto 0;
     width: 80%;
@@ -29,16 +28,45 @@ h1 {
     color: #AAA;
 }
 
-.white {
-    color: #BBB;
+.black {
+    color: #333;
 }
 
 .green {
-    color: green;
+    color: #008C00;
 }
 
 .blue {
     color: blue;
+}
+
+.icon {
+    background-image: url("http://www-cdn.jtvnw.net/images/xarth/g/g18_star-00000080.png");
+    background-position: 0 center;
+    background-repeat: no-repeat;
+    display: inline-block;
+    vertical-align: bottom;
+    height: 18px;
+    min-width: 18px;
+}
+
+.subscriber {
+    background-image: url("http://static-cdn.jtvnw.net/jtv_user_pictures/chansub-GuardsmanBob-badge-b221ca008202f2a3-18x18.png");
+}
+
+.turbo {
+    background-image: url("http://www-cdn.jtvnw.net/images/xarth/g/g18_turbo-FFFFFF80.png");
+    background-color: #6441a5;
+}
+
+.broadcaster {
+    background-image: url("http://www-cdn.jtvnw.net/images/xarth/g/g18_camera-FFFFFF80.png");
+    background-color: #000000;
+}
+
+.mod {
+    background-image: url("http://www-cdn.jtvnw.net/images/xarth/g/g18_sword-FFFFFF80.png");
+    background-color: #090;
 }
 
 .twitch-connect {
@@ -72,10 +100,18 @@ h1 {
 .chat-control {
     height: 15%;
     width: 100%;
-    border-top: 1px solid rgba(255, 255, 255, 0.65);
+    border-top: 1px solid #999;
     position: absolute;
     bottom: 0;
     background-color: #e5e5e5;
+}
+
+.chat-line {
+    margin-bottom: 4px;
+}
+
+.chat-line span {
+    margin-right: 5px;
 }
 
 .chat-line a:link {
@@ -90,4 +126,9 @@ h1 {
 }
 .chat-line a:active {
     text-decoration: none;
+}
+
+.user-name {
+    font-weight: bold;
+    text-transform: capitalize;
 }

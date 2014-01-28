@@ -5,7 +5,7 @@ var User = function(name) {
 }
 
 User.prototype.addUserMode = function(mode) {
-    this.userModes.push(mode);
+    if (!this.userModes.contains(mode)) this.userModes.push(mode);
 }
 
 module.exports.create = function(name) {

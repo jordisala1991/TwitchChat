@@ -12,6 +12,10 @@ Twitch.prototype.getDefaultUserColor = function(userName) {
     return this.chatColors[n % this.chatColors.length];
 }
 
+Twitch.prototype.isTheBroadcaster = function(userName) {
+    return '#' + userName == configurations.channelName
+}
+
 module.exports.create = function() {
     return new Twitch();
 }

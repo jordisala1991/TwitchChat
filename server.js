@@ -28,6 +28,9 @@ var client = new irc.Client(configurations.serverAddress, configurations.botName
     socket_handler = require('./server_modules/socket_handler').create();
 
 client.send('TWITCHCLIENT');
+client.addListener('+mode', function(channel, by, argument, message, raw) {
+    irc_handler.addModerator(raw.args[2]);
+});
 client.addListener('pm', function(from, text, message) {
     irc_handler.privateMessage(from, text, message);
 });
