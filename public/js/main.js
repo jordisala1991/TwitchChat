@@ -29,12 +29,12 @@ $(document).ready(function() {
     // }
 
     function addMessage(message) {
-        var messageDate, chatLine, chatBox, shouldScroll;
+        var messageDate = moment().format('HH:mm'),
+            chatBox = $('.chat-lines'), 
+            shouldScroll = scrolledToBottom(chatBox),
+            chatLine;
 
-        messageDate = moment().format('HH:mm');
-        chatLine = '<div class="chat-line ' + message.messageColor + '">[' + messageDate + '] <strong style=\'color: ' + message.userColor + '\'>&lt;' + message.user + '&gt;</strong> ' + message.message + '</div>';
-        chatBox = $('.chat-lines');
-        shouldScroll = scrolledToBottom(chatBox);
+        chatLine = '<div class="chat-line ' + message.messageColor + '">[' + messageDate + '] <strong style=\'color: ' + message.user.userColor + '\'>&lt;' + message.user.userName + '&gt;</strong> ' + message.message + '</div>';
         chatBox.append(chatLine);
         ++messageCount;
 
@@ -49,8 +49,8 @@ $(document).ready(function() {
         $('.chat-input').val('');
     }
 
-    socket.on('message', function(data) {
-        addMessage(data);
+    socket.on('message', function(message) {
+        addMessage(message);
     });
 
     $('.chat-input').keypress(function(e) {
