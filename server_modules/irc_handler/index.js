@@ -10,8 +10,8 @@ IrcHandler.prototype.getUser = function(userName) {
     var user;
     if (this.users[userName] !== undefined) user = this.users[userName];
     else {
-        user = this.userFactory.create(userName);
-        user.userColor = this.twitch.getDefaultUserColor(userName.capitalize());
+        user = this.userFactory.create(userName.capitalize());
+        user.userColor = this.twitch.getDefaultUserColor(userName);
         this.users[userName] = user;
     }
 
@@ -49,7 +49,7 @@ IrcHandler.prototype.privateMessage = function(from, text, message) {
 
             if (jtvCommands.contains(command)) {
                 var user = this.getUser(userName);
-                if (command == jtvCommands[0]) user.color = value;
+                if (command == jtvCommands[0]) user.userColor = value;
                 else user.addUserMode(value);
             }
         }
