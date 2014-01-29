@@ -8,7 +8,6 @@ Twitch.init({clientId: '1uzx8xlados5eqn7sb0pexoyuzkc1g9'}, function(error, statu
     Twitch.api({method: 'chat/guardsmanbob/emoticons'}, function(error, data) {
         if (error) console.log(error);
         emoticons = $.map(data.emoticons, processEmoticon);
-        console.log(emoticons);
     });
 
     if (status.authenticated) {
