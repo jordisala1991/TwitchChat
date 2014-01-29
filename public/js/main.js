@@ -85,7 +85,7 @@ function replaceEmoticons(textMessage) {
 }
 
 function getChatLine(message) {
-    var textMessage = replaceEmoticons(message.message);
+    var textMessage = replaceEmoticons(linkify(message.message));
         template = 
         '<div class="chat-line {MESSAGE_COLOR}">' +
             '<span>[{DATE}]</span>' +
