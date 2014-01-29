@@ -29,7 +29,7 @@ IrcHandler.prototype.getMessageColor = function(user, message) {
 
 IrcHandler.prototype.addModerator = function(userName) {
     user = this.getUser(userName);
-    user.addUserMode('mod');
+    if (!user.userModes.contains('broadcaster')) user.addUserMode('mod');
 }
 
 IrcHandler.prototype.channelMessage = function(from, text, message) {
