@@ -4,24 +4,11 @@ http = require('http');
 app = express();
 server = http.createServer(app);
 io = require('socket.io').listen(server);
-piler = require('piler');
 configurations = require('./server_modules/configurations');
 io.set('log level', 1);
 
-var clientjs = piler.createJSManager();
-var clientcss = piler.createCSSManager();
 
 app.configure(function() {
-    clientjs.bind(app);
-    clientcss.bind(app);
-
-    clientcss.addFile(__dirname + "/public/css/normalize.css");
-    clientcss.addFile(__dirname + "/public/css/main.css");
-    clientcss.addFile(__dirname + "/public/css/styles.css");
-
-    clientjs.addFile(__dirname + "/public/js/plugins.js");
-    clientjs.addFile(__dirname + "/public/js/main.js");
-
     app.set('views', __dirname + '/views');
     app.set('view engine', 'twig');
     app.set('twig options', { 
@@ -29,17 +16,10 @@ app.configure(function() {
     });
     app.use(express.static(__dirname + '/public'));
 });
-
-app.configure("development", function() {
-    clientjs.liveUpdate(clientcss, io);
-});
-
 app.get('/', function(request, response){
     response.render('index', {
         'socketUrl': configurations.environment.baseUrl,
-        'channelName': configurations.channelName,
-        'js': clientjs.renderTags(),
-        'css': clientcss.renderTags()
+        'channelName': configurations.channelName
     });
 });
 
