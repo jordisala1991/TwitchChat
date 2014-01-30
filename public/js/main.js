@@ -34,7 +34,15 @@ Twitch.init({clientId: '1uzx8xlados5eqn7sb0pexoyuzkc1g9'}, function(error, statu
     }
 });
 
-function processEmoticon(rawEmoticon, index) {
+function getMessageColor(userName, textMessage) {
+    var color = 'black';
+    if (/bob/i.test(textMessage)) color = 'green';
+    if (userName == 'gmanbot') color = 'blue';
+
+    return color;
+}
+
+function processEmoticon(rawEmoticon) {
     var template = 
         '<span class="emoticon" style="' +
             'background-image: url({BACKGROUND_IMAGE}); ' +
@@ -105,7 +113,7 @@ function getChatLine(message) {
             '<span>{MESSAGE}</span>' +
         '</div>';
 
-    template = template.replace("{MESSAGE_COLOR}", message.messageColor);
+    template = template.replace("{MESSAGE_COLOR}", getMessageColor(message.user.userName, textMessage));
     template = template.replace("{DATE}", moment().format('HH:mm'));
     template = template.replace("{USER_COLOR}", message.user.userColor);
     template = template.replace("{USER_NAME}", message.user.userName);

@@ -23,7 +23,8 @@ module.exports = function(grunt) {
         },
         uglify: {
             options: {
-                banner: '/*! script <%= grunt.template.today("dd-mm-yyyy") %> */\n'
+                banner: '/*! script <%= grunt.template.today("dd-mm-yyyy") %> */\n',
+                compress: true
             },
             dist: {
                 files: {
@@ -34,7 +35,7 @@ module.exports = function(grunt) {
         watch: {
             css: {
                 files: 'public/js/*.js',
-                tasks: ['uglify', 'concat']
+                tasks: ['concat', 'uglify']
             },
             js: {
                 files: 'public/css/*.css',

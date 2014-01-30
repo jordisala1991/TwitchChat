@@ -19,15 +19,7 @@ IrcHandler.prototype.getUser = function(userName) {
     return user;
 }
 
-IrcHandler.prototype.getMessageColor = function(user, message) {
-    var color = 'black';
-    if (/bob/i.test(message)) color = 'green';
-    if (user == 'gmanbot') color = 'blue';
-
-    return color;
-}
-
-IrcHandler.prototype.addModerator = function(userName) {
+IrcHandler.prototype.addModeratorMessage = function(userName) {
     user = this.getUser(userName);
     if (!user.userModes.contains('broadcaster')) user.addUserMode('mod');
 }
@@ -37,8 +29,7 @@ IrcHandler.prototype.channelMessage = function(from, text, message) {
 
     message = {
         user: user,
-        message: text,
-        messageColor: this.getMessageColor(from, text)
+        message: text
     }
     io.sockets.emit('message', message);
 }

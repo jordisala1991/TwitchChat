@@ -5,7 +5,6 @@ app = express();
 server = http.createServer(app);
 io = require('socket.io').listen(server);
 configurations = require('./server_modules/configurations');
-io.set('log level', 1);
 
 
 app.configure(function() {
@@ -30,7 +29,7 @@ var client = new irc.Client(configurations.serverAddress, configurations.botName
 
 client.send('TWITCHCLIENT');
 client.addListener('+mode', function(channel, by, argument, message, raw) {
-    irc_handler.addModerator(raw.args[2]);
+    irc_handler.addModeratorMessage(raw.args[2]);
 });
 client.addListener('pm', function(from, text, message) {
     irc_handler.privateMessage(from, text, message);
@@ -42,6 +41,7 @@ client.addListener('error', function(message) {
     irc_handler.errorMessage(message);
 });
 
+io.set('log level', 1);
 io.sockets.on('connection', function(socket) {
     socket_handler.connection(socket);
 });
