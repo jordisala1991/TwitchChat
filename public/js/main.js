@@ -2,10 +2,18 @@ var socket = io.connect(socketUrl);
 var messageCount = 1;
 var emoticons;
 
+Array.prototype.contains = function(object) {
+    var index = this.length;
+    while (index--) {
+        if (this[index] === object) return true;
+    }
+    return false;
+}
+
 Twitch.init({clientId: '1uzx8xlados5eqn7sb0pexoyuzkc1g9'}, function(error, status) {
     if (error) console.log(error);
 
-    Twitch.api({method: 'chat/guardsmanbob/emoticons'}, function(error, data) {
+    Twitch.api({method: 'chat/' + channelName.substring(1) + '/emoticons'}, function(error, data) {
         if (error) console.log(error);
         emoticons = $.map(data.emoticons, processEmoticon);
     });
@@ -77,15 +85,18 @@ function getUserModesIcons(userModes) {
     return icons;
 }
 
-function replaceEmoticons(textMessage) {
+function replaceEmoticons(textMessage, is_subscriber) {
     for (var index = emoticons.length - 1; index >= 0; index--) {
-        textMessage = textMessage.replace(new RegExp(emoticons[index].regex, 'g'), emoticons[index].html);
+        if (emoticons[index].subscriber_only) {
+            if (is_subscriber) textMessage = textMessage.replace(new RegExp(emoticons[index].regex, 'g'), emoticons[index].html);
+        }
+        else textMessage = textMessage.replace(new RegExp(emoticons[index].regex, 'g'), emoticons[index].html);
     };
     return textMessage;
 }
 
 function getChatLine(message) {
-    var textMessage = replaceEmoticons(linkify(message.message));
+    var textMessage = replaceEmoticons(linkify(message.message), message.user.userModes.contains('subscriber'));
         template = 
         '<div class="chat-line {MESSAGE_COLOR}">' +
             '<span>[{DATE}]</span>' +

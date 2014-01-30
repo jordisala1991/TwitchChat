@@ -18,7 +18,8 @@ app.configure(function() {
 });
 app.get('/', function(request, response){
     response.render('index', {
-        'socketUrl': configurations.environment.baseUrl
+        'socketUrl': configurations.environment.baseUrl,
+        'channelName': configurations.channelName
     });
 });
 
