@@ -38,7 +38,7 @@ function getMessageColor(userName, textMessage) {
     var color = 'black';
     if (/bob/i.test(textMessage)) color = 'green';
     if (userName == 'gmanbot') color = 'blue';
-
+    else if (userName == 'twitchnotify') color = 'red';
     return color;
 }
 

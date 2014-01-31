@@ -40,6 +40,10 @@ h1 {
     color: blue;
 }
 
+.red {
+    color: orangered;
+}
+
 .icon {
     background-image: url("http://www-cdn.jtvnw.net/images/xarth/g/g18_star-00000080.png");
     background-position: 0 center;
