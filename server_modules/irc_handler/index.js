@@ -1,9 +1,10 @@
-require('../general_functions');
-
 var IrcHandler = function() {
     this.twitch = require('../twitch').create();
     this.userFactory = require('./user.js');
     this.users = [];
+    
+    var Entities = require('html-entities').AllHtmlEntities;
+    this.entities = new Entities();
 }
 
 IrcHandler.prototype.getUser = function(userName) {
@@ -25,11 +26,12 @@ IrcHandler.prototype.addModeratorMessage = function(userName) {
 }
 
 IrcHandler.prototype.channelMessage = function(from, text, message) {
-    var user = this.getUser(from);
+    var user = this.getUser(from),
+        textMessage = this.entities.encode(text);
 
     message = {
         user: user,
-        message: text
+        message: textMessage
     }
     io.sockets.emit('message', message);
 }
