@@ -223,8 +223,8 @@ $(document).ready(function() {
         if (e.which == 13) {
             e.preventDefault();
             twitchChat.sendMessage($('.chat-input').val());
+            $('.chat-input').val('');
         }
-        $('.chat-input').val('');
     });
 
     $('.send-chat-message').click(function() {
