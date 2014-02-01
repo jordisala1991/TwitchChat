@@ -1,21 +1,3 @@
-function processEmoticon(rawEmoticon) {
-    var template = 
-        '<span class="emoticon" style="' +
-            'background-image: url({BACKGROUND_IMAGE}); ' +
-            'height: {HEIGHT}px; ' +
-            'width: {WIDTH}px;' +
-            'margin: {MARGIN_TOP}px 0px;">' +
-        '</span>';
-
-    template = template.replace("{BACKGROUND_IMAGE}", rawEmoticon.url);
-    template = template.replace("{HEIGHT}", rawEmoticon.height);
-    template = template.replace("{WIDTH}", rawEmoticon.width);
-    template = template.replace("{MARGIN_TOP}", (18-rawEmoticon.height)/2);
-
-    rawEmoticon.html = template
-    return rawEmoticon;
-}
-
 String.prototype.linkify = function() {
     var replacedText,
         replacePattern1,

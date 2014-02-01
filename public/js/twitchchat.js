@@ -4,6 +4,7 @@ var TwitchChat = function(chatBox) {
     this.chatBox = chatBox;
     this.maxChatMessages = 150;
     this.socket = io.connect(socketUrl);
+    this.templating = new Templating();
 }
 
 TwitchChat.prototype.isScrolledToBottom = function() {
@@ -52,22 +53,16 @@ TwitchChat.prototype.getChatLine = function(textMessage, user) {
     var userModeIcons = this.getUserModesIcons(user),
         processedMessage = this.replaceEmoticons(textMessage.linkify(), user),
         messageDate = moment().format('HH:mm'),
-        messageColor = this.getMessageColor(user, processedMessage),
-        template = 
-            '<div class="chat-line {MESSAGE_COLOR}">' +
-                '<span>[{DATE}]</span>' +
-                '{USER_MODE_ICONS}' +
-                '<span class="user-name" style="color: {USER_COLOR}">&lt;{USER_NAME}&gt;</span>' +
-                '<span>{MESSAGE}</span>' +
-            '</div>';
+        messageColor = this.getMessageColor(user, processedMessage);
 
-    template = template.replace("{MESSAGE_COLOR}", messageColor);
-    template = template.replace("{DATE}", messageDate);
-    template = template.replace("{USER_COLOR}", user.userColor);
-    template = template.replace("{USER_NAME}", user.userName);
-    template = template.replace("{MESSAGE}", processedMessage);
-    template = template.replace("{USER_MODE_ICONS}", userModeIcons);
-    return template;
+    return this.templating.messageTemplating({
+        messageColor: messageColor,
+        messageDate: messageDate,
+        userColor: user.userColor,
+        userName: user.userName,
+        textMessage: processedMessage,
+        userModeIcons: userModeIcons
+    });
 }
 
 TwitchChat.prototype.addMessage = function(message) {
@@ -81,6 +76,18 @@ TwitchChat.prototype.addMessage = function(message) {
     if (shouldScroll) {
         this.scrollDown();
     }
+}
+
+TwitchChat.prototype.addEmoticon = function(rawEmoticon) {
+    var emoticonTemplate = this.templating.emoticonTemplating({
+        emoticonUrl: rawEmoticon.url,
+        emoticonHeight: rawEmoticon.height,
+        emoticonWidth: rawEmoticon.width,
+        emoticonMargins: (18 - rawEmoticon.height)/2
+    });
+
+    rawEmoticon.html = emoticonTemplate;
+    this.emoticons.push(rawEmoticon);
 }
 
 TwitchChat.prototype.sendMessage = function(textMessage) {

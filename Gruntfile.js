@@ -7,7 +7,12 @@ module.exports = function(grunt) {
                 separator: ';'
             },
             dist: {
-                src: ['public/js/plugins.js', 'public/js/functions.js', 'public/js/twitchchat.js', 'public/js/main.js'],
+                src: ['public/js/plugins.js',
+                      'public/js/functions.js',
+                      'public/js/templating.js',
+                      'public/js/twitchchat.js',
+                      'public/js/main.js'],
+                      
                 dest: 'public/js/dest/script.js'
             }
         },

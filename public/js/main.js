@@ -5,7 +5,10 @@ Twitch.init({clientId: '1uzx8xlados5eqn7sb0pexoyuzkc1g9'}, function(error, statu
 
     Twitch.api({method: 'chat/' + channelName.substring(1) + '/emoticons'}, function(error, data) {
         if (error) console.log(error);
-        twitchChat.emoticons = $.map(data.emoticons, processEmoticon);
+
+        $.map(data.emoticons, function(rawEmoticon) {
+            twitchChat.addEmoticon(rawEmoticon);
+        });
     });
 
     if (status.authenticated) {
