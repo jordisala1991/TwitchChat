@@ -29,7 +29,8 @@ SocketHandler.prototype.connection = function(socket) {
 
     socket.on('message_to_send', function(data) {
         if (user_client !== undefined) {
-            user_client.irc.privmsg(configurations.channelName, data);         
+            console.log(user_client);
+            //user_client.irc.privmsg(configurations.channelName, data);         
         }
     });
 }
