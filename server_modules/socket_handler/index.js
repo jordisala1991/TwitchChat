@@ -31,7 +31,7 @@ SocketHandler.prototype.connection = function(socket) {
 
     socket.on('message_to_send', function(data) {
         if (username in that.clients) {
-            that.clients[username].irc.privmsg(configurations.channelName, data);         
+            that.clients[username].privmsg(configurations.channelName, data);         
         }
     });
 
