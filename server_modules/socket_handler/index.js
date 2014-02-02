@@ -1,11 +1,10 @@
 var SocketHandler = function() {
-    this.clients = [];
 }
 
 SocketHandler.prototype.connection = function(socket) {
     var username,
         oauth,
-        that = this;
+        user_client;
 
     socket.on('login', function(data) {
         username = data.username;
@@ -21,22 +20,23 @@ SocketHandler.prototype.connection = function(socket) {
             password: oauth
         };
 
-        var user_client = api.createClient(username, options);
+        user_client = api.createClient(username, options);
         api.hookEvent(username, 'registered', function(message) {
             user_client.irc.join(configurations.channelName);
-            that.clients[username] = user_client;
+
         });
     });
 
     socket.on('message_to_send', function(data) {
-        if (that.clients[username] !== undefined) {
-            that.clients[username].irc.privmsg(configurations.channelName, data);         
+        if (user_client !== undefined) {
+            console.log(user_client);
+            user_client.irc.privmsg(configurations.channelName, data);         
         }
     });
 
     socket.on('disconnect', function() {
         if (username !== undefined) {
-            delete that.clients[username];
+            api.destroyClient(username);
         }
     });
 }
