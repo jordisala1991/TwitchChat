@@ -14,7 +14,8 @@ ExpressHandler.prototype.configure = function() {
 ExpressHandler.prototype.homeAction = function(request, response) {
     response.render('index', {
         'socketUrl': configurations.environment.baseUrl,
-        'channelName': configurations.channelName
+        'channelName': configurations.channelName,
+        'environment': app.settings.env
     });
 }
 
