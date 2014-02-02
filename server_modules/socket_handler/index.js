@@ -31,7 +31,7 @@ SocketHandler.prototype.connection = function(socket) {
 
     socket.on('message_to_send', function(data) {
         if (that.clients[username] !== undefined) {
-            user_client.say(configurations.channelName, data);         
+            that.clients[username].say(configurations.channelName, data);         
         }
     });
 
