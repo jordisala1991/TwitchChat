@@ -1,5 +1,5 @@
 var SocketHandler = function() {
-    this.clients = [];
+    this.clients = new Object();
 }
 
 SocketHandler.prototype.connection = function(socket) {
@@ -21,24 +21,22 @@ SocketHandler.prototype.connection = function(socket) {
             password: oauth
         };
 
-        if (that.clients[username] == undefined) {
-            var user_client = api.createClient(username, options);
-            api.hookEvent(username, 'registered', function(message) {
-                user_client.irc.join(configurations.channelName);
-            });
+        var user_client = api.createClient(username, options);
+        api.hookEvent(username, 'registered', function(message) {
+            user_client.irc.join(configurations.channelName);
+        });
 
-            that.clients[username] = user_client;
-        }
+        that.clients[username] = user_client;
     });
 
     socket.on('message_to_send', function(data) {
-        if (that.clients[username] !== undefined) {
+        if (username in that.clients) {
             that.clients[username].irc.privmsg(configurations.channelName, data);         
         }
     });
 
     socket.on('disconnect', function() {
-        if (username !== undefined) {
+        if (username in that.clients) {
             delete that.clients[username];
         }
     });
