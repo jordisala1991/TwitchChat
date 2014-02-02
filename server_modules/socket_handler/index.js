@@ -18,7 +18,6 @@ SocketHandler.prototype.connection = function(socket) {
 
         var date = new Date();
         irc_identifier = data.username + '-' + date.getTime();
-        console.log(irc_identifier);
         user_client = api.createClient(irc_identifier, options);
         api.hookEvent(data.username, 'registered', function(message) {
             user_client.irc.join(configurations.channelName);
@@ -29,6 +28,10 @@ SocketHandler.prototype.connection = function(socket) {
         if (user_client !== undefined) {
             user_client.irc.privmsg(configurations.channelName, data);         
         }
+    });
+
+    socket.on('disconnect', function() {
+        api.destroyClient(irc_identifier);
     });
 }
 
