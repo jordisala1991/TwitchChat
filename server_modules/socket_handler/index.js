@@ -3,10 +3,8 @@ var SocketHandler = function() {
 
 SocketHandler.prototype.connection = function(socket) {
     var user_client;
-    
-    socket.on('login', function(data) {
-        username = data.username;
 
+    socket.on('login', function(data) {
         var options = {
             nick: data.username,
             user: data.username,
@@ -21,7 +19,6 @@ SocketHandler.prototype.connection = function(socket) {
         user_client = api.createClient(data.username, options);
         api.hookEvent(data.username, 'registered', function(message) {
             user_client.irc.join(configurations.channelName);
-
         });
     });
 
