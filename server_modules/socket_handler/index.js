@@ -2,7 +2,8 @@ var SocketHandler = function() {
 }
 
 SocketHandler.prototype.connection = function(socket) {
-    var user_client;
+    var user_client,
+        irc_identifier;
 
     socket.on('login', function(data) {
         var options = {
@@ -15,8 +16,10 @@ SocketHandler.prototype.connection = function(socket) {
             password: data.oauth
         };
 
-        api.destroyClient(data.username);
-        user_client = api.createClient(data.username, options);
+        var date = new Date();
+        irc_identifier = data.username + '-' + date.getTime();
+        console.log(irc_identifier);
+        user_client = api.createClient(irc_identifier, options);
         api.hookEvent(data.username, 'registered', function(message) {
             user_client.irc.join(configurations.channelName);
         });
