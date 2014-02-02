@@ -1,4 +1,3 @@
-require('newrelic');
 irc = require('irc');
 express = require('express');
 http = require('http');
