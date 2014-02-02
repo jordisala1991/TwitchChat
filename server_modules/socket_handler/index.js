@@ -24,9 +24,8 @@ SocketHandler.prototype.connection = function(socket) {
         var user_client = api.createClient(username, options);
         api.hookEvent(username, 'registered', function(message) {
             user_client.irc.join(configurations.channelName);
+            that.clients[username] = user_client;
         });
-
-        that.clients[username] = user_client;
     });
 
     socket.on('message_to_send', function(data) {
