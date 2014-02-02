@@ -2,9 +2,8 @@ var SocketHandler = function() {
 }
 
 SocketHandler.prototype.connection = function(socket) {
-    var user_client,
-        username;
-
+    var user_client;
+    
     socket.on('login', function(data) {
         username = data.username;
 
@@ -18,6 +17,7 @@ SocketHandler.prototype.connection = function(socket) {
             password: data.oauth
         };
 
+        api.destroyClient(data.username);
         user_client = api.createClient(data.username, options);
         api.hookEvent(data.username, 'registered', function(message) {
             user_client.irc.join(configurations.channelName);
@@ -28,12 +28,6 @@ SocketHandler.prototype.connection = function(socket) {
     socket.on('message_to_send', function(data) {
         if (user_client !== undefined) {
             user_client.irc.privmsg(configurations.channelName, data);         
-        }
-    });
-
-    socket.on('disconnect', function() {
-        if (username !== undefined) {
-            api.destroyClient(username);
         }
     });
 }
