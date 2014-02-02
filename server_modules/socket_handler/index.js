@@ -2,26 +2,23 @@ var SocketHandler = function() {
 }
 
 SocketHandler.prototype.connection = function(socket) {
-    var username,
-        oauth,
-        user_client;
+    var user_client;
 
     socket.on('login', function(data) {
-        username = data.username;
-        oauth = data.oauth;
-
         var options = {
-            nick: username,
-            user: username,
-            realname: username,
+            nick: data.username,
+            user: data.username,
+            realname: data.username,
             server: configurations.connectionOptions.server,
             port: configurations.connectionOptions.port,
             secure: configurations.connectionOptions.secure,
-            password: oauth
+            password: data.oauth
         };
 
-        user_client = api.createClient(username, options);
-        api.hookEvent(username, 'registered', function(message) {
+        user_client = api.createClient(data.username, options);
+        console.log(user_client);
+        api.hookEvent(data.username, 'registered', function(message) {
+            console.log(user_client);
             user_client.irc.join(configurations.channelName);
 
         });
