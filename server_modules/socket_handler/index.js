@@ -4,10 +4,12 @@ var SocketHandler = function() {
 
 SocketHandler.prototype.connection = function(socket) {
     var username,
+        oauth,
         that = this;
 
     socket.on('login', function(data) {
         username = data.username;
+        oauth = data.oauth;
 
         var options = {
             nick: username,
@@ -16,7 +18,7 @@ SocketHandler.prototype.connection = function(socket) {
             server: configurations.connectionOptions.server,
             port: configurations.connectionOptions.port,
             secure: configurations.connectionOptions.secure,
-            password: 'oauth:' + data.oauth
+            password: oauth
         };
 
         if (that.clients[username] == undefined) {
