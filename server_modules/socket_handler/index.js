@@ -1,28 +1,45 @@
 var SocketHandler = function() {
-
+    this.clients = [];
 }
 
 SocketHandler.prototype.connection = function(socket) {
-    var user_client;
+    var username,
+        that = this;
 
     socket.on('login', function(data) {
-        options = {
-            userName: data.username,
-            realName: data.username,
-            password: 'oauth:' + data.oauth,
-            port: configurations.connectionOptions.port,
-            debug: configurations.connectionOptions.debug,
-            channels: [ configurations.channelName ],
-        }
+        username = data.username;
 
-        user_client = new irc.Client(configurations.serverAddress, data.username, options);
+        var options = {
+            nick: username,
+            user: username,
+            realname: username,
+            server: configurations.connectionOptions.server,
+            port: configurations.connectionOptions.port,
+            secure: configurations.connectionOptions.secure,
+            password: 'oauth:' + data.oauth
+        };
+
+        if (that.clients[username] == undefined) {
+            var user_client = api.createClient(username, options);
+            api.hookEvent(username, 'registered', function(message) {
+                user_client.irc.join(configurations.channelName);
+            });
+
+            that.clients[username] = user_client;
+        }
     });
 
     socket.on('message_to_send', function(data) {
-        if (user_client !== undefined) {
+        if (that.clients[username] !== undefined) {
             user_client.say(configurations.channelName, data);         
         }
-    })
+    });
+
+    socket.on('disconnect', function() {
+        if (username !== undefined) {
+            delete that.clients[username];
+        }
+    });
 }
 
 module.exports.create = function() {

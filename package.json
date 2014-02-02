@@ -9,10 +9,10 @@
     "author": "Jordi",
     "license": "BSD-2-Clause",
     "dependencies": {
-        "irc": "~0.3.6",
         "twig": "0.6.0",
         "socket.io": "~0.9.16",
         "express": "~3.4.8",
+        "irc-factory": "~1.2.6",
         "html-entities": "1.0.10"
     },
     "devDependencies": {

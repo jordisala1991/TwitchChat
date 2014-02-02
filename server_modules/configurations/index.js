@@ -1,18 +1,19 @@
-var channel = '#guardsmanbob';
+var botName = 'nodejsbot',
+    channelName = '#guardsmanbob';
 
-configurations = {
-    channelName: channel,
+var configurations = {
+    channelName: channelName,
+    botName: botName,
     connectionOptions: {
-        userName: 'NodeJSBot',
-        realName: 'NodeJSBot',
-        password: 'oauth:r8v4m5f9ikugupuyid1czaqiofgatvs',
+        nick: botName,
+        user: botName,
+        realname: botName,
+        server: 'irc.twitch.tv',
         port: 6667,
-        debug: false,
-        channels: [ channel ],
+        secure: false,
+        password: 'oauth:r8v4m5f9ikugupuyid1czaqiofgatvs'
     },
-    serverAddress: 'irc.twitch.tv',
-    botName: 'NodeJSBot',
     environment: require('./conf')()
-}
+};
 
 module.exports = configurations;
