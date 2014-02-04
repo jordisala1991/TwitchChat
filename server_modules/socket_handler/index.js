@@ -1,49 +1,34 @@
 var SocketHandler = function() {
+    this.clientFactory = require('./client.js');
     this.clients = []
 }
 
 SocketHandler.prototype.connection = function(socket) {
     var userName,
-        that = this;
+        self = this;
 
     socket.on('login', function(data) {
         userName = data.username;
 
-        if (that.clients[data.username] === undefined) {
-            var options = {
-                nick: data.username,
-                user: data.username,
-                realname: data.username,
-                server: configurations.connectionOptions.server,
-                port: configurations.connectionOptions.port,
-                secure: configurations.connectionOptions.secure,
-                password: data.oauth
-            };
-
-            var user_client = api.createClient(data.username, options);
-            
-            that.clients[data.username] = user_client;
-            api.hookEvent(data.username, 'registered', function(message) {
-                user_client.irc.join(configurations.channelName);
-            });
+        if (self.clients[data.username] === undefined) {
+            var client = self.clientFactory.create(data.username, data.oauth);
+            self.clients[data.username] = client;
         }
-        else {
-            var user_client = that.clients[data.username];
-            if (user_client.irc.isConnected() === false) {
-                user_client.irc.reconnect();
-            }
-        }
+        else self.clients[data.username].connect();
     });
 
-    socket.on('message_to_send', function(data) {
-        if (that.clients[userName] !== undefined) {
-            that.clients[userName].irc.privmsg(configurations.channelName, data);         
+    socket.on('message_to_send', function(message) {
+        if (self.clients[userName] !== undefined) {
+            self.clients[userName].sendChannelMessage(message);
         }
     });
 
     socket.on('disconnect', function() {
-        if (that.clients[userName] !== undefined) {
-            that.clients[userName].irc.disconnect('quitting');
+        if (self.clients[userName] !== undefined) {
+            self.clients[userName].disconnect();
+            if (self.clients[userName].numberOfConnections == 0) {
+                delete self.clients[userName];
+            }
         }
     });
 }
