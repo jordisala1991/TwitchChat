@@ -78,6 +78,15 @@ TwitchChat.prototype.addMessage = function(message) {
     }
 }
 
+TwitchChat.prototype.deleteMessages = function(userName) {
+    var messagesToDelete = this.chatBox.find('div[data-sender="' + userName + '"]');
+
+    messagesToDelete.each(function() {
+        $(this).removeClass().addClass('chat-line').addClass('initial');
+        $(this).find('span.message').text('<message deleted>');
+    });
+}
+
 TwitchChat.prototype.addEmoticon = function(rawEmoticon) {
     var emoticonTemplate = this.templating.emoticonTemplating({
         emoticonUrl: rawEmoticon.url,

@@ -44,4 +44,8 @@ $(document).ready(function() {
     twitchChat.socket.on('message', function(message) {
         twitchChat.addMessage(message);
     });
+
+    twitchChat.socket.on('clear_chat', function(userName) {
+        twitchChat.deleteMessages(userName);
+    });
 });

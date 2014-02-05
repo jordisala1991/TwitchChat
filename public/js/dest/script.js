@@ -57,17 +57,18 @@ Array.prototype.contains = function(object) {
 
 Templating.prototype.messageTemplating = function(data) {
     var messageTemplate = 
-        '<div class="chat-line {MESSAGE_COLOR}">' +
+        '<div class="chat-line {MESSAGE_COLOR}" data-sender="{SENDER}">' +
             '<span>[{DATE}]</span>' +
             '{USER_MODE_ICONS}' +
             '<span class="user-name" style="color: {USER_COLOR}">&lt;{USER_NAME}&gt;</span>' +
-            '<span>{MESSAGE}</span>' +
+            '<span class="message">{MESSAGE}</span>' +
         '</div>';
 
     messageTemplate = messageTemplate.replace("{MESSAGE_COLOR}", data.messageColor);
     messageTemplate = messageTemplate.replace("{DATE}", data.messageDate);
     messageTemplate = messageTemplate.replace("{USER_COLOR}", data.userColor);
     messageTemplate = messageTemplate.replace("{USER_NAME}", data.userName);
+    messageTemplate = messageTemplate.replace("{SENDER}", data.userName);
     messageTemplate = messageTemplate.replace("{MESSAGE}", data.textMessage);
     messageTemplate = messageTemplate.replace("{USER_MODE_ICONS}", data.userModeIcons);
 
@@ -169,6 +170,15 @@ TwitchChat.prototype.addMessage = function(message) {
     }
 }
 
+TwitchChat.prototype.deleteMessages = function(userName) {
+    var messagesToDelete = this.chatBox.find('div[data-sender="' + userName + '"]');
+
+    messagesToDelete.each(function() {
+        $(this).removeClass().addClass('chat-line').addClass('initial');
+        $(this).find('span.message').text('<message deleted>');
+    });
+}
+
 TwitchChat.prototype.addEmoticon = function(rawEmoticon) {
     var emoticonTemplate = this.templating.emoticonTemplating({
         emoticonUrl: rawEmoticon.url,
@@ -234,5 +244,9 @@ $(document).ready(function() {
 
     twitchChat.socket.on('message', function(message) {
         twitchChat.addMessage(message);
+    });
+
+    twitchChat.socket.on('clear_chat', function(userName) {
+        twitchChat.deleteMessages(userName);
     });
 });

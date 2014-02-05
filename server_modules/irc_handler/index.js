@@ -40,7 +40,7 @@ IrcHandler.prototype.channelMessage = function(userName, textMessage) {
 }
 
 IrcHandler.prototype.privateMessage = function(textMessage) {
-    var jtvCommands = ['USERCOLOR', 'SPECIALUSER'],
+    var jtvCommands = ['USERCOLOR', 'SPECIALUSER', 'CLEARCHAT'],
         textSplitted = textMessage.split(' ');
 
     if (textSplitted.length == 3) {
@@ -52,6 +52,14 @@ IrcHandler.prototype.privateMessage = function(textMessage) {
             var user = this.getUser(userName);
             if (command == jtvCommands[0]) user.userColor = value;
             else user.addUserMode(value);
+        }
+    }
+    else if (textSplitted.length == 2) {
+        var command = textSplitted[0],
+            userName = textSplitted[1];
+
+        if (command == jtvCommands[2]) {
+            io.sockets.emit('clear_chat', userName);
         }
     }
 }
