@@ -82,7 +82,7 @@ TwitchChat.prototype.deleteMessages = function(userName) {
     var messagesToDelete = this.chatBox.find('div[data-sender="' + userName + '"]');
 
     messagesToDelete.each(function() {
-        $(this).removeClass().addClass('chat-line').addClass('initial');
+        $(this).removeClass().addClass('chat-line').addClass('grey');
         $(this).find('span.message').text('<message deleted>');
     });
 }
