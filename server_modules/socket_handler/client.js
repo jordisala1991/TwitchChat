@@ -26,7 +26,8 @@ Client.prototype.createIrcConnection = function() {
 }
 
 Client.prototype.sendChannelMessage = function(message) {
-    this.connection.irc.privmsg(configurations.channelName, message);
+    if (message.startsWith('/me')) this.connection.irc.me(configurations.channelName, message.substring(4));
+    else this.connection.irc.privmsg(configurations.channelName, message);
 }
 
 Client.prototype.connect = function() {

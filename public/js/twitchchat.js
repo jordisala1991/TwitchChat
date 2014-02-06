@@ -78,6 +78,35 @@ TwitchChat.prototype.addMessage = function(message) {
     }
 }
 
+TwitchChat.prototype.getChatLineForActions = function(textMessage, user) {
+    var userModeIcons = this.getUserModesIcons(user),
+        processedMessage = this.replaceEmoticons(textMessage.linkify(), user),
+        messageDate = moment().format('HH:mm'),
+        messageColor = this.getMessageColor(user, processedMessage);
+
+    return this.templating.actionTemplating({
+        messageColor: messageColor,
+        messageDate: messageDate,
+        userColor: user.userColor,
+        userName: user.userName,
+        textMessage: processedMessage,
+        userModeIcons: userModeIcons
+    });
+}
+
+TwitchChat.prototype.addAction = function(message) {
+    var chatLine = this.getChatLineForActions(message.message, message.user),
+        shouldScroll = this.isScrolledToBottom();
+
+    this.chatBox.append(chatLine);
+    ++this.messageCount;
+
+    this.deleteFirstMessage();
+    if (shouldScroll) {
+        this.scrollDown();
+    }
+}
+
 TwitchChat.prototype.deleteMessages = function(userName) {
     var messagesToDelete = this.chatBox.find('div[data-sender="' + userName + '"]');
 

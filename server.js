@@ -24,6 +24,9 @@ api.hookEvent(configurations.botName, 'privmsg', function(message) {
 api.hookEvent(configurations.botName, 'mode_change', function(message) {
     irc_handler.userModeChanged(message);
 });
+api.hookEvent(configurations.botName, 'action', function(message) {
+    irc_handler.handleAction(message);
+});
 
 
 io.set('log level', 1);

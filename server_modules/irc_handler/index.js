@@ -9,6 +9,7 @@ var IrcHandler = function() {
 
 IrcHandler.prototype.getUser = function(userName) {
     var user;
+    
     if (this.users[userName] !== undefined) user = this.users[userName];
     else {
         user = this.userFactory.create(userName);
@@ -16,7 +17,6 @@ IrcHandler.prototype.getUser = function(userName) {
         if (this.twitch.isTheBroadcaster(userName)) user.addUserMode('broadcaster');
         this.users[userName] = user;
     }
-
     return user;
 }
 
@@ -31,10 +31,7 @@ IrcHandler.prototype.userModeChanged = function(message) {
 IrcHandler.prototype.channelMessage = function(userName, textMessage) {
     var user = this.getUser(userName),
         textMessage = this.entities.encode(textMessage),
-        message = {
-            user: user,
-            message: textMessage
-        };
+        message = { user: user, message: textMessage };
 
     io.sockets.emit('message', message);
 }
@@ -50,6 +47,7 @@ IrcHandler.prototype.privateMessage = function(textMessage) {
 
         if (jtvCommands.contains(command)) {
             var user = this.getUser(userName);
+
             if (command == jtvCommands[0]) user.userColor = value;
             else user.addUserMode(value);
         }
@@ -72,6 +70,18 @@ IrcHandler.prototype.handleMessage = function(message) {
             commandSplitted = rawSplitted[0].split(' ');
         if (commandSplitted[0] = 'jtv') this.privateMessage(rawSplitted[2]);
     }
+}
+
+IrcHandler.prototype.actionMessage = function(userName, textMessage) {
+    var user = this.getUser(userName),
+        textMessage = this.entities.encode(textMessage),
+        message = { user: user, message: textMessage };
+
+    io.sockets.emit('action', message);
+}
+
+IrcHandler.prototype.handleAction = function(message) {
+    this.actionMessage(message.username, message.message);
 }
 
 module.exports.create = function() {

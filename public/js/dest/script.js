@@ -75,6 +75,26 @@ Templating.prototype.messageTemplating = function(data) {
     return messageTemplate;
 }
 
+Templating.prototype.actionTemplating = function(data) {
+    var messageTemplate = 
+        '<div class="chat-line {MESSAGE_COLOR}" data-sender="{SENDER}">' +
+            '<span>[{DATE}]</span>' +
+            '{USER_MODE_ICONS}' +
+            '<span class="user-name" style="color: {USER_COLOR}">&bull; {USER_NAME}</span>' +
+            '<span class="message">{MESSAGE}</span>' +
+        '</div>';
+
+    messageTemplate = messageTemplate.replace("{MESSAGE_COLOR}", data.messageColor);
+    messageTemplate = messageTemplate.replace("{DATE}", data.messageDate);
+    messageTemplate = messageTemplate.replace("{USER_COLOR}", data.userColor);
+    messageTemplate = messageTemplate.replace("{USER_NAME}", data.userName);
+    messageTemplate = messageTemplate.replace("{SENDER}", data.userName);
+    messageTemplate = messageTemplate.replace("{MESSAGE}", data.textMessage);
+    messageTemplate = messageTemplate.replace("{USER_MODE_ICONS}", data.userModeIcons);
+
+    return messageTemplate;
+}
+
 Templating.prototype.emoticonTemplating = function(data) {
     var emoticonTemplate =
         '<span class="emoticon" style="' +
@@ -170,6 +190,35 @@ TwitchChat.prototype.addMessage = function(message) {
     }
 }
 
+TwitchChat.prototype.getChatLineForActions = function(textMessage, user) {
+    var userModeIcons = this.getUserModesIcons(user),
+        processedMessage = this.replaceEmoticons(textMessage.linkify(), user),
+        messageDate = moment().format('HH:mm'),
+        messageColor = this.getMessageColor(user, processedMessage);
+
+    return this.templating.actionTemplating({
+        messageColor: messageColor,
+        messageDate: messageDate,
+        userColor: user.userColor,
+        userName: user.userName,
+        textMessage: processedMessage,
+        userModeIcons: userModeIcons
+    });
+}
+
+TwitchChat.prototype.addAction = function(message) {
+    var chatLine = this.getChatLineForActions(message.message, message.user),
+        shouldScroll = this.isScrolledToBottom();
+
+    this.chatBox.append(chatLine);
+    ++this.messageCount;
+
+    this.deleteFirstMessage();
+    if (shouldScroll) {
+        this.scrollDown();
+    }
+}
+
 TwitchChat.prototype.deleteMessages = function(userName) {
     var messagesToDelete = this.chatBox.find('div[data-sender="' + userName + '"]');
 
@@ -245,7 +294,11 @@ $(document).ready(function() {
     twitchChat.socket.on('message', function(message) {
         twitchChat.addMessage(message);
     });
-
+    
+    twitchChat.socket.on('action', function(message) {
+        twitchChat.addAction(message);
+    });
+    
     twitchChat.socket.on('clear_chat', function(userName) {
         twitchChat.deleteMessages(userName);
     });

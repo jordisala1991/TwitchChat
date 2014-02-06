@@ -5,3 +5,7 @@ Array.prototype.contains = function(object) {
     }
     return false;
 }
+
+String.prototype.startsWith = function(str) {
+    return this.lastIndexOf(str, 0) === 0;
+}
