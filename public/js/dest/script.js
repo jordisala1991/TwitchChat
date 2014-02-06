@@ -161,62 +161,30 @@ TwitchChat.prototype.getUserModesIcons = function(user) {
     return icons;
 }
 
-TwitchChat.prototype.getChatLine = function(textMessage, user) {
-    var userModeIcons = this.getUserModesIcons(user),
-        processedMessage = this.replaceEmoticons(textMessage.linkify(), user),
-        messageDate = moment().format('HH:mm'),
-        messageColor = this.getMessageColor(user, processedMessage);
+TwitchChat.prototype.getChatLine = function(textMessage, user, messageType) {
+    var processedMessage = this.replaceEmoticons(textMessage.linkify(), user),
+        templateData = {
+            userName: user.userName,
+            userColor: user.userColor,
+            messageColor: this.getMessageColor(user, processedMessage),
+            messageDate: moment().format('HH:mm'),
+            textMessage: processedMessage,
+            userModeIcons: this.getUserModesIcons(user)        
+        };
 
-    return this.templating.messageTemplating({
-        messageColor: messageColor,
-        messageDate: messageDate,
-        userColor: user.userColor,
-        userName: user.userName,
-        textMessage: processedMessage,
-        userModeIcons: userModeIcons
-    });
+    if (messageType == 'message') return this.templating.messageTemplating(templateData);
+    else return this.templating.actionTemplating(templateData);
 }
 
-TwitchChat.prototype.addMessage = function(message) {
-    var chatLine = this.getChatLine(message.message, message.user),
+TwitchChat.prototype.addMessage = function(message, messageType) {
+    var chatLine = this.getChatLine(message.message, message.user, messageType),
         shouldScroll = this.isScrolledToBottom();
 
     this.chatBox.append(chatLine);
     ++this.messageCount;
 
     this.deleteFirstMessage();
-    if (shouldScroll) {
-        this.scrollDown();
-    }
-}
-
-TwitchChat.prototype.getChatLineForActions = function(textMessage, user) {
-    var userModeIcons = this.getUserModesIcons(user),
-        processedMessage = this.replaceEmoticons(textMessage.linkify(), user),
-        messageDate = moment().format('HH:mm'),
-        messageColor = this.getMessageColor(user, processedMessage);
-
-    return this.templating.actionTemplating({
-        messageColor: messageColor,
-        messageDate: messageDate,
-        userColor: user.userColor,
-        userName: user.userName,
-        textMessage: processedMessage,
-        userModeIcons: userModeIcons
-    });
-}
-
-TwitchChat.prototype.addAction = function(message) {
-    var chatLine = this.getChatLineForActions(message.message, message.user),
-        shouldScroll = this.isScrolledToBottom();
-
-    this.chatBox.append(chatLine);
-    ++this.messageCount;
-
-    this.deleteFirstMessage();
-    if (shouldScroll) {
-        this.scrollDown();
-    }
+    if (shouldScroll) this.scrollDown();
 }
 
 TwitchChat.prototype.deleteMessages = function(userName) {
@@ -292,11 +260,11 @@ $(document).ready(function() {
     });
 
     twitchChat.socket.on('message', function(message) {
-        twitchChat.addMessage(message);
+        twitchChat.addMessage(message, 'message');
     });
     
     twitchChat.socket.on('action', function(message) {
-        twitchChat.addAction(message);
+        twitchChat.addMessage(message, 'action');
     });
     
     twitchChat.socket.on('clear_chat', function(userName) {
