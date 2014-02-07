@@ -1,25 +1,8 @@
-var TwitchChat = function(chatBox) {
-    this.messageCount = 1;
+var TwitchChat = function() {
     this.emoticons = [];
-    this.chatBox = chatBox;
-    this.maxChatMessages = 150;
     this.socket = io.connect(socketUrl);
     this.templating = new Templating();
-}
-
-TwitchChat.prototype.isScrolledToBottom = function() {
-    return (this.chatBox[0].scrollHeight - this.chatBox.scrollTop() - 15) <= this.chatBox.outerHeight();
-}
-
-TwitchChat.prototype.scrollDown = function() {
-    this.chatBox.scrollTop(this.chatBox[0].scrollHeight);
-}
-
-TwitchChat.prototype.deleteFirstMessage = function() {
-    if (this.messageCount > this.maxChatMessages) {
-        --this.messageCount;
-        this.chatBox.find('.chat-line').first().remove();
-    }
+    this.chatHandler = new ChatHandler($('.chat-lines'));
 }
 
 TwitchChat.prototype.replaceEmoticons = function(textMessage, user) {
@@ -65,41 +48,28 @@ TwitchChat.prototype.getChatLine = function(textMessage, user, messageType) {
 }
 
 TwitchChat.prototype.addMessage = function(message, messageType) {
-    var chatLine = this.getChatLine(message.message, message.user, messageType),
-        shouldScroll = this.isScrolledToBottom();
-
-    this.chatBox.append(chatLine);
-    ++this.messageCount;
-
-    this.deleteFirstMessage();
-    if (shouldScroll) this.scrollDown();
+    var chatLine = this.getChatLine(message.message, message.user, messageType);
+    
+    this.chatHandler.addChatLine(chatLine);
 }
 
 TwitchChat.prototype.deleteMessages = function(userName) {
-    var messagesToDelete = this.chatBox.find('div[data-sender="' + userName + '"]');
-
-    messagesToDelete.each(function() {
-        $(this).removeClass().addClass('chat-line').addClass('grey');
-        $(this).find('span.message').text('<message deleted>');
-    });
+    this.chatHandler.removeChatLinesFrom(userName);
 }
 
 TwitchChat.prototype.addEmoticon = function(rawEmoticon) {
-    var emoticonTemplate = this.templating.emoticonTemplating({
+    rawEmoticon.html = this.templating.emoticonTemplating({
         emoticonUrl: rawEmoticon.url,
         emoticonHeight: rawEmoticon.height,
         emoticonWidth: rawEmoticon.width,
         emoticonMargins: (18 - rawEmoticon.height)/2
     });
 
-    rawEmoticon.html = emoticonTemplate;
     this.emoticons.push(rawEmoticon);
 }
 
 TwitchChat.prototype.sendMessage = function(textMessage) {
-    if (textMessage != '') {
-        this.socket.emit('message_to_send', textMessage);
-    }
+    if (textMessage != '') this.socket.emit('message_to_send', textMessage);
 }
 
 TwitchChat.prototype.sendCredentials = function(userName, token) {
