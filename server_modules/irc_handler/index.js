@@ -3,7 +3,7 @@ var IrcHandler = function() {
     this.userFactory = require('./user.js');
     this.users = [];
     
-    var Entities = require('html-entities').AllHtmlEntities;
+    var Entities = require('html-entities').XmlEntities;
     this.entities = new Entities();
 }
 
