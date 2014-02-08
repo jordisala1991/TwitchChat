@@ -59,7 +59,7 @@ Templating.prototype.messageTemplating = function(data) {
     var messageTemplate = 
         '<div class="chat-line {MESSAGE_COLOR}" data-sender="{SENDER}">' +
             '<span>[{DATE}]</span>' +
-            '{USER_MODE_ICONS}' +
+            '{USER_BADGES_ICONS}' +
             '<span class="user-name" style="color: {USER_COLOR}">&lt;{USER_NAME}&gt;</span>' +
             '<span class="message">{MESSAGE}</span>' +
         '</div>';
@@ -70,7 +70,7 @@ Templating.prototype.messageTemplating = function(data) {
     messageTemplate = messageTemplate.replace("{USER_NAME}", data.userName);
     messageTemplate = messageTemplate.replace("{SENDER}", data.userName);
     messageTemplate = messageTemplate.replace("{MESSAGE}", data.textMessage);
-    messageTemplate = messageTemplate.replace("{USER_MODE_ICONS}", data.userModeIcons);
+    messageTemplate = messageTemplate.replace("{USER_BADGES_ICONS}", data.userBadges);
 
     return messageTemplate;
 }
@@ -100,7 +100,7 @@ Templating.prototype.emoticonTemplating = function(data) {
         '<span class="emoticon" style="' +
             'background-image: url({BACKGROUND_IMAGE}); ' +
             'height: {HEIGHT}px; ' +
-            'width: {WIDTH}px;' +
+            'width: {WIDTH}px; ' +
             'margin: {MARGIN_TOP}px 0px;">' +
         '</span>';
 
@@ -110,8 +110,29 @@ Templating.prototype.emoticonTemplating = function(data) {
     emoticonTemplate = emoticonTemplate.replace("{MARGIN_TOP}", data.emoticonMargins);
 
     return emoticonTemplate;
+}
+
+Templating.prototype.subscriberTemplating = function(imageUrl) {
+    var badgeTemplate =
+        '<span class="badge" style="' +
+            'background-image: url({BACKGROUND_IMAGE});">' +
+        '</span>';
+
+    badgeTemplate = badgeTemplate.replace("{BACKGROUND_IMAGE}", imageUrl);
+
+    return badgeTemplate;
+}
+
+Templating.prototype.badgeTemplating = function(badge) {
+    var badgeTemplate =
+        '<span class="badge {BADGE}"></span>';
+
+    badgeTemplate = badgeTemplate.replace("{BADGE}", badge);
+
+    return badgeTemplate;
 };var EmoticonHandler = function() {
     this.emoticons = [];
+    this.badges = [];
     this.templating = new Templating();
     this.initializeEmoticons();
 }
@@ -137,6 +158,15 @@ EmoticonHandler.prototype.replaceEmoticons = function(textMessage, user) {
     return textMessage;
 }
 
+EmoticonHandler.prototype.getUserBadges = function(user) {
+    var icons = '';
+    for (var index = 0; index < user.userModes.length; index++) {
+        var mode = user.userModes[index];
+        icons += this.badges[mode];
+    };
+    return icons;
+}
+
 EmoticonHandler.prototype.addToEmoticonSet = function(set, emoticon) {
     if (this.emoticons[set] == undefined) this.emoticons[set] = [];
     this.emoticons[set].push(emoticon);
@@ -147,25 +177,20 @@ EmoticonHandler.prototype.addToGeneralEmoticons = function(emoticon) {
     this.emoticons['general'].push(emoticon);
 }
 
-EmoticonHandler.prototype.buildEmoticonHtml = function(image) {
-    var emoticonHtml = this.templating.emoticonTemplating({
-        emoticonUrl: image.url,
-        emoticonHeight: image.height,
-        emoticonWidth: image.width,
-        emoticonMargins: (18 - image.height)/2
-    });
-
-    return emoticonHtml;
-}
-
 EmoticonHandler.prototype.buildEmoticon = function(rawEmoticon, image) {
-    var emoticon = {
-        regex: rawEmoticon.regex,
-        url: image.url,
-        height: image.height,
-        width: image.width,
-        html: this.buildEmoticonHtml(image)
-    };
+    var emoticonHtml = this.templating.emoticonTemplating({
+            emoticonUrl: image.url,
+            emoticonHeight: image.height,
+            emoticonWidth: image.width,
+            emoticonMargins: (18 - image.height)/2
+        }),    
+        emoticon = {
+            regex: rawEmoticon.regex,
+            url: image.url,
+            height: image.height,
+            width: image.width,
+            html: emoticonHtml
+        };
 
     return emoticon;
 }
@@ -184,6 +209,15 @@ EmoticonHandler.prototype.setEmoticons = function(emoticons) {
     };
 }
 
+EmoticonHandler.prototype.setBadges = function(badges) {
+    var self = this;
+
+    $.each(badges, function(mode, badge) {
+        if (mode == 'subscriber') self.badges[mode] = self.templating.subscriberTemplating(badge.image);
+        else self.badges[mode] = self.templating.badgeTemplating(mode);
+    });
+}
+
 EmoticonHandler.prototype.initializeEmoticons = function() {
     var self = this;
 
@@ -192,6 +226,14 @@ EmoticonHandler.prototype.initializeEmoticons = function() {
         dataType: 'json'
     }).done(function(emoticons) {
         self.setEmoticons(emoticons.emoticons);
+    });
+
+    $.ajax({
+        url: 'https://api.twitch.tv/kraken/chat/' + channelName.substring(1) + '/badges',
+        dataType: 'jsonp'
+    }).done(function(badges) {
+        delete badges['_links'];
+        self.setBadges(badges);
     });
 };var ChatHandler = function(chatBox) {
     this.messageCount = 1;
@@ -245,24 +287,17 @@ TwitchChat.prototype.getMessageColor = function(user, textMessage) {
     return color;
 }
 
-TwitchChat.prototype.getUserModesIcons = function(user) {
-    var icons = '';
-    for (var index = 0; index < user.userModes.length; index++) {
-        icons += '<span class="icon ' + user.userModes[index] + '"></span>';
-    };
-    return icons;
-}
-
 TwitchChat.prototype.getChatLine = function(textMessage, user, messageType) {
     var message = textMessage.linkify(),
         processedMessage = this.emoticonHandler.replaceEmoticons(message, user),
+        userBadges = this.emoticonHandler.getUserBadges(user),
         templateData = {
             userName: user.userName,
             userColor: user.userColor,
             messageColor: this.getMessageColor(user, processedMessage),
             messageDate: moment().format('HH:mm'),
             textMessage: processedMessage,
-            userModeIcons: this.getUserModesIcons(user)        
+            userBadges: userBadges
         };
 
     if (messageType == 'message') return this.templating.messageTemplating(templateData);

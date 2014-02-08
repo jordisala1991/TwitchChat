@@ -44,7 +44,7 @@ h1 {
     color: orangered;
 }
 
-.icon {
+.badge {
     background-image: url("http://www-cdn.jtvnw.net/images/xarth/g/g18_star-00000080.png");
     background-position: 0 center;
     background-repeat: no-repeat;
@@ -61,8 +61,14 @@ h1 {
     vertical-align: bottom;
 }
 
-.subscriber {
-    background-image: url("http://static-cdn.jtvnw.net/jtv_user_pictures/chansub-GuardsmanBob-badge-b221ca008202f2a3-18x18.png");
+.admin {
+    background-image: url("http://www-cdn.jtvnw.net/images/xarth/g/g18_badge-FFFFFF80.png");
+    background-color: red;
+}
+
+.staff {
+    background-image: url("http://www-cdn.jtvnw.net/images/xarth/g/g18_wrench-FFFFFF80.png");
+    background-color: #6441a5;
 }
 
 .turbo {

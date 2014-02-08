@@ -6,7 +6,7 @@ Templating.prototype.messageTemplating = function(data) {
     var messageTemplate = 
         '<div class="chat-line {MESSAGE_COLOR}" data-sender="{SENDER}">' +
             '<span>[{DATE}]</span>' +
-            '{USER_MODE_ICONS}' +
+            '{USER_BADGES_ICONS}' +
             '<span class="user-name" style="color: {USER_COLOR}">&lt;{USER_NAME}&gt;</span>' +
             '<span class="message">{MESSAGE}</span>' +
         '</div>';
@@ -17,7 +17,7 @@ Templating.prototype.messageTemplating = function(data) {
     messageTemplate = messageTemplate.replace("{USER_NAME}", data.userName);
     messageTemplate = messageTemplate.replace("{SENDER}", data.userName);
     messageTemplate = messageTemplate.replace("{MESSAGE}", data.textMessage);
-    messageTemplate = messageTemplate.replace("{USER_MODE_ICONS}", data.userModeIcons);
+    messageTemplate = messageTemplate.replace("{USER_BADGES_ICONS}", data.userBadges);
 
     return messageTemplate;
 }
@@ -47,7 +47,7 @@ Templating.prototype.emoticonTemplating = function(data) {
         '<span class="emoticon" style="' +
             'background-image: url({BACKGROUND_IMAGE}); ' +
             'height: {HEIGHT}px; ' +
-            'width: {WIDTH}px;' +
+            'width: {WIDTH}px; ' +
             'margin: {MARGIN_TOP}px 0px;">' +
         '</span>';
 
@@ -57,4 +57,24 @@ Templating.prototype.emoticonTemplating = function(data) {
     emoticonTemplate = emoticonTemplate.replace("{MARGIN_TOP}", data.emoticonMargins);
 
     return emoticonTemplate;
+}
+
+Templating.prototype.subscriberTemplating = function(imageUrl) {
+    var badgeTemplate =
+        '<span class="badge" style="' +
+            'background-image: url({BACKGROUND_IMAGE});">' +
+        '</span>';
+
+    badgeTemplate = badgeTemplate.replace("{BACKGROUND_IMAGE}", imageUrl);
+
+    return badgeTemplate;
+}
+
+Templating.prototype.badgeTemplating = function(badge) {
+    var badgeTemplate =
+        '<span class="badge {BADGE}"></span>';
+
+    badgeTemplate = badgeTemplate.replace("{BADGE}", badge);
+
+    return badgeTemplate;
 }

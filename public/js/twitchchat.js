@@ -13,24 +13,17 @@ TwitchChat.prototype.getMessageColor = function(user, textMessage) {
     return color;
 }
 
-TwitchChat.prototype.getUserModesIcons = function(user) {
-    var icons = '';
-    for (var index = 0; index < user.userModes.length; index++) {
-        icons += '<span class="icon ' + user.userModes[index] + '"></span>';
-    };
-    return icons;
-}
-
 TwitchChat.prototype.getChatLine = function(textMessage, user, messageType) {
     var message = textMessage.linkify(),
         processedMessage = this.emoticonHandler.replaceEmoticons(message, user),
+        userBadges = this.emoticonHandler.getUserBadges(user),
         templateData = {
             userName: user.userName,
             userColor: user.userColor,
             messageColor: this.getMessageColor(user, processedMessage),
             messageDate: moment().format('HH:mm'),
             textMessage: processedMessage,
-            userModeIcons: this.getUserModesIcons(user)        
+            userBadges: userBadges
         };
 
     if (messageType == 'message') return this.templating.messageTemplating(templateData);
