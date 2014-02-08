@@ -79,7 +79,7 @@ Templating.prototype.actionTemplating = function(data) {
     var messageTemplate = 
         '<div class="chat-line {MESSAGE_COLOR}" data-sender="{SENDER}">' +
             '<span>[{DATE}]</span>' +
-            '{USER_MODE_ICONS}' +
+            '{USER_BADGES_ICONS}' +
             '<span class="user-name" style="color: {USER_COLOR}">&bull; {USER_NAME}</span>' +
             '<span class="message">{MESSAGE}</span>' +
         '</div>';
@@ -90,7 +90,7 @@ Templating.prototype.actionTemplating = function(data) {
     messageTemplate = messageTemplate.replace("{USER_NAME}", data.userName);
     messageTemplate = messageTemplate.replace("{SENDER}", data.userName);
     messageTemplate = messageTemplate.replace("{MESSAGE}", data.textMessage);
-    messageTemplate = messageTemplate.replace("{USER_MODE_ICONS}", data.userModeIcons);
+    messageTemplate = messageTemplate.replace("{USER_BADGES_ICONS}", data.userBadges);
 
     return messageTemplate;
 }
