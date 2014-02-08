@@ -1,19 +1,8 @@
 var TwitchChat = function() {
-    this.emoticons = [];
     this.socket = io.connect(socketUrl);
     this.templating = new Templating();
     this.chatHandler = new ChatHandler($('.chat-lines'));
-}
-
-TwitchChat.prototype.replaceEmoticons = function(textMessage, user) {
-    var isSubscriber = user.userModes.contains('subscriber');
-    for (var index = this.emoticons.length - 1; index >= 0; index--) {
-        if (this.emoticons[index].subscriber_only) {
-            if (isSubscriber) textMessage = textMessage.replace(new RegExp(this.emoticons[index].regex, 'g'), this.emoticons[index].html);
-        }
-        else textMessage = textMessage.replace(new RegExp(this.emoticons[index].regex, 'g'), this.emoticons[index].html);
-    };
-    return textMessage;
+    this.emoticonHandler = new EmoticonHandler();
 }
 
 TwitchChat.prototype.getMessageColor = function(user, textMessage) {
@@ -33,7 +22,8 @@ TwitchChat.prototype.getUserModesIcons = function(user) {
 }
 
 TwitchChat.prototype.getChatLine = function(textMessage, user, messageType) {
-    var processedMessage = this.replaceEmoticons(textMessage.linkify(), user),
+    var message = textMessage.linkify(),
+        processedMessage = this.emoticonHandler.replaceEmoticons(message, user),
         templateData = {
             userName: user.userName,
             userColor: user.userColor,
@@ -55,17 +45,6 @@ TwitchChat.prototype.addMessage = function(message, messageType) {
 
 TwitchChat.prototype.deleteMessages = function(userName) {
     this.chatHandler.removeChatLinesFrom(userName);
-}
-
-TwitchChat.prototype.addEmoticon = function(rawEmoticon) {
-    rawEmoticon.html = this.templating.emoticonTemplating({
-        emoticonUrl: rawEmoticon.url,
-        emoticonHeight: rawEmoticon.height,
-        emoticonWidth: rawEmoticon.width,
-        emoticonMargins: (18 - rawEmoticon.height)/2
-    });
-
-    this.emoticons.push(rawEmoticon);
 }
 
 TwitchChat.prototype.sendMessage = function(textMessage) {

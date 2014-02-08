@@ -37,7 +37,7 @@ IrcHandler.prototype.channelMessage = function(userName, textMessage) {
 }
 
 IrcHandler.prototype.privateMessage = function(textMessage) {
-    var jtvCommands = ['USERCOLOR', 'SPECIALUSER', 'CLEARCHAT'],
+    var jtvCommands = ['USERCOLOR', 'SPECIALUSER', 'EMOTESET', 'CLEARCHAT'],
         textSplitted = textMessage.split(' ');
 
     if (textSplitted.length == 3) {
@@ -49,14 +49,15 @@ IrcHandler.prototype.privateMessage = function(textMessage) {
             var user = this.getUser(userName);
 
             if (command == jtvCommands[0]) user.userColor = value;
-            else user.addUserMode(value);
+            else if (command == jtvCommands[1]) user.addUserMode(value);
+            else if (command == jtvCommands[2]) user.setEmoteSets(value);
         }
     }
     else if (textSplitted.length == 2) {
         var command = textSplitted[0],
             userName = textSplitted[1];
 
-        if (command == jtvCommands[2]) {
+        if (command == jtvCommands[3]) {
             io.sockets.emit('clear_chat', userName);
         }
     }

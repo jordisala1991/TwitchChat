@@ -110,6 +110,89 @@ Templating.prototype.emoticonTemplating = function(data) {
     emoticonTemplate = emoticonTemplate.replace("{MARGIN_TOP}", data.emoticonMargins);
 
     return emoticonTemplate;
+};var EmoticonHandler = function() {
+    this.emoticons = [];
+    this.templating = new Templating();
+    this.initializeEmoticons();
+}
+
+EmoticonHandler.prototype.replaceEmoticonSet = function(set, textMessage) {
+    var emoticonsSet = this.emoticons[set];
+
+    if (emoticonsSet !== undefined) {
+        for (var index = 0; index < emoticonsSet.length; index++) {
+            var regExp = new RegExp(emoticonsSet[index].regex, 'g');
+            textMessage = textMessage.replace(regExp, emoticonsSet[index].html);
+        };
+    }
+    return textMessage;
+}
+
+EmoticonHandler.prototype.replaceEmoticons = function(textMessage, user) {
+    var sets = user.emoteSets;
+
+    for (var index = 0; index < sets.length; index++) {
+        textMessage = this.replaceEmoticonSet(sets[index], textMessage);
+    };
+    return textMessage;
+}
+
+EmoticonHandler.prototype.addToEmoticonSet = function(set, emoticon) {
+    if (this.emoticons[set] == undefined) this.emoticons[set] = [];
+    this.emoticons[set].push(emoticon);
+}
+
+EmoticonHandler.prototype.addToGeneralEmoticons = function(emoticon) {
+    if (this.emoticons['general'] == undefined) this.emoticons['general'] = [];
+    this.emoticons['general'].push(emoticon);
+}
+
+EmoticonHandler.prototype.buildEmoticonHtml = function(image) {
+    var emoticonHtml = this.templating.emoticonTemplating({
+        emoticonUrl: image.url,
+        emoticonHeight: image.height,
+        emoticonWidth: image.width,
+        emoticonMargins: (18 - image.height)/2
+    });
+
+    return emoticonHtml;
+}
+
+EmoticonHandler.prototype.buildEmoticon = function(rawEmoticon, image) {
+    var emoticon = {
+        regex: rawEmoticon.regex,
+        url: image.url,
+        height: image.height,
+        width: image.width,
+        html: this.buildEmoticonHtml(image)
+    };
+
+    return emoticon;
+}
+
+EmoticonHandler.prototype.setEmoticons = function(emoticons) {
+    for (var index = 0; index < emoticons.length; index++) {
+        var rawEmoticon = emoticons[index];
+
+        for (var indexj = 0; indexj < rawEmoticon.images.length; indexj++) {
+            var emoticon = this.buildEmoticon(rawEmoticon, rawEmoticon.images[indexj]),
+                set = rawEmoticon.images[indexj].emoticon_set;
+
+            if (set == null) this.addToGeneralEmoticons(emoticon);
+            else this.addToEmoticonSet(set, emoticon);
+        };
+    };
+}
+
+EmoticonHandler.prototype.initializeEmoticons = function() {
+    var self = this;
+
+    $.ajax({
+        url: '/emoticons.json',
+        dataType: 'json'
+    }).done(function(emoticons) {
+        self.setEmoticons(emoticons.emoticons);
+    });
 };var ChatHandler = function(chatBox) {
     this.messageCount = 1;
     this.chatBox = chatBox;
@@ -148,21 +231,10 @@ ChatHandler.prototype.removeChatLinesFrom = function(userName) {
         $(this).find('span.message').text('<message deleted>');
     });
 };var TwitchChat = function() {
-    this.emoticons = [];
     this.socket = io.connect(socketUrl);
     this.templating = new Templating();
     this.chatHandler = new ChatHandler($('.chat-lines'));
-}
-
-TwitchChat.prototype.replaceEmoticons = function(textMessage, user) {
-    var isSubscriber = user.userModes.contains('subscriber');
-    for (var index = this.emoticons.length - 1; index >= 0; index--) {
-        if (this.emoticons[index].subscriber_only) {
-            if (isSubscriber) textMessage = textMessage.replace(new RegExp(this.emoticons[index].regex, 'g'), this.emoticons[index].html);
-        }
-        else textMessage = textMessage.replace(new RegExp(this.emoticons[index].regex, 'g'), this.emoticons[index].html);
-    };
-    return textMessage;
+    this.emoticonHandler = new EmoticonHandler();
 }
 
 TwitchChat.prototype.getMessageColor = function(user, textMessage) {
@@ -182,7 +254,8 @@ TwitchChat.prototype.getUserModesIcons = function(user) {
 }
 
 TwitchChat.prototype.getChatLine = function(textMessage, user, messageType) {
-    var processedMessage = this.replaceEmoticons(textMessage.linkify(), user),
+    var message = textMessage.linkify(),
+        processedMessage = this.emoticonHandler.replaceEmoticons(message, user),
         templateData = {
             userName: user.userName,
             userColor: user.userColor,
@@ -206,17 +279,6 @@ TwitchChat.prototype.deleteMessages = function(userName) {
     this.chatHandler.removeChatLinesFrom(userName);
 }
 
-TwitchChat.prototype.addEmoticon = function(rawEmoticon) {
-    rawEmoticon.html = this.templating.emoticonTemplating({
-        emoticonUrl: rawEmoticon.url,
-        emoticonHeight: rawEmoticon.height,
-        emoticonWidth: rawEmoticon.width,
-        emoticonMargins: (18 - rawEmoticon.height)/2
-    });
-
-    this.emoticons.push(rawEmoticon);
-}
-
 TwitchChat.prototype.sendMessage = function(textMessage) {
     if (textMessage != '') this.socket.emit('message_to_send', textMessage);
 }
@@ -227,14 +289,6 @@ TwitchChat.prototype.sendCredentials = function(userName, token) {
 
 Twitch.init({clientId: '1uzx8xlados5eqn7sb0pexoyuzkc1g9'}, function(error, status) {
     if (error) console.log(error);
-
-    Twitch.api({method: 'chat/' + channelName.substring(1) + '/emoticons'}, function(error, data) {
-        if (error) console.log(error);
-
-        $.map(data.emoticons, function(rawEmoticon) {
-            twitchChat.addEmoticon(rawEmoticon);
-        });
-    });
 
     if (status.authenticated) {
         var token = Twitch.getToken();

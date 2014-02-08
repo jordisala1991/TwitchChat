@@ -8,6 +8,10 @@ io = require('socket.io').listen(server);
 require('./server_modules/general_functions');
 configurations = require('./server_modules/configurations');
 
+//request = require('request');
+//fs = require('fs');
+//request('https://api.twitch.tv/kraken/chat/emoticons').pipe(fs.createWriteStream('public/emoticons.json'));
+
 var client = api.createClient(configurations.botName, configurations.connectionOptions),
     socket_handler = require('./server_modules/socket_handler').create(),
     irc_handler = require('./server_modules/irc_handler').create(),
@@ -38,7 +42,7 @@ io.sockets.on('connection', function(socket) {
 app.configure(function() {
     express_handler.configure();
 });
-app.get('/', function(request, response){
+app.get('/', function(request, response) {
     express_handler.homeAction(request, response);
 });
 

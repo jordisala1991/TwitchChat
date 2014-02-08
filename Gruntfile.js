@@ -10,6 +10,7 @@ module.exports = function(grunt) {
                 src: ['public/js/plugins.js',
                       'public/js/functions.js',
                       'public/js/templating.js',
+                      'public/js/emoticonhandler.js',
                       'public/js/chathandler.js',
                       'public/js/twitchchat.js',
                       'public/js/main.js'],
