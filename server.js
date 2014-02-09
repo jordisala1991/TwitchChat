@@ -7,10 +7,10 @@ server = http.createServer(app);
 io = require('socket.io').listen(server);
 require('./server_modules/general_functions');
 configurations = require('./server_modules/configurations');
+request = require('request');
+fs = require('fs');
 
-//request = require('request');
-//fs = require('fs');
-//request('https://api.twitch.tv/kraken/chat/emoticons').pipe(fs.createWriteStream('public/emoticons.json'));
+request('https://api.twitch.tv/kraken/chat/emoticons').pipe(fs.createWriteStream('public/emoticons.json'));
 
 var client = api.createClient(configurations.botName, configurations.connectionOptions),
     socket_handler = require('./server_modules/socket_handler').create(),
