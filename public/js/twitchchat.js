@@ -36,6 +36,10 @@ TwitchChat.prototype.addMessage = function(message, messageType) {
     this.chatHandler.addChatLine(chatLine);
 }
 
+TwitchChat.prototype.deleteAllMessages = function() {
+    this.chatHandler.removeAllChatLines();
+}
+
 TwitchChat.prototype.deleteMessages = function(userName) {
     this.chatHandler.removeChatLinesFrom(userName);
 }

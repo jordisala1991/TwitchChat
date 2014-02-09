@@ -81,7 +81,7 @@ EmoticonHandler.prototype.setBadges = function(badges) {
     var self = this;
 
     $.each(badges, function(mode, badge) {
-        if (mode == 'subscriber') self.badges[mode] = self.templating.subscriberTemplating(badge.image);
+        if (mode == 'subscriber' && badge !== null) self.badges[mode] = self.templating.subscriberTemplating(badge.image);
         else self.badges[mode] = self.templating.badgeTemplating(mode);
     });
 }

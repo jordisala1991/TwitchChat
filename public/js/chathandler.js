@@ -28,6 +28,10 @@ ChatHandler.prototype.addChatLine = function(chatLine) {
     if (shouldScroll) this.scrollDown();
 }
 
+ChatHandler.prototype.removeAllChatLines = function() {
+    this.chatBox.find('div').remove();
+}
+
 ChatHandler.prototype.removeChatLinesFrom = function(userName) {
     var messagesToDelete = this.chatBox.find('div[data-sender="' + userName + '"]');
 

@@ -213,7 +213,7 @@ EmoticonHandler.prototype.setBadges = function(badges) {
     var self = this;
 
     $.each(badges, function(mode, badge) {
-        if (mode == 'subscriber') self.badges[mode] = self.templating.subscriberTemplating(badge.image);
+        if (mode == 'subscriber' && badge !== null) self.badges[mode] = self.templating.subscriberTemplating(badge.image);
         else self.badges[mode] = self.templating.badgeTemplating(mode);
     });
 }
@@ -265,6 +265,10 @@ ChatHandler.prototype.addChatLine = function(chatLine) {
     if (shouldScroll) this.scrollDown();
 }
 
+ChatHandler.prototype.removeAllChatLines = function() {
+    this.chatBox.find('div').remove();
+}
+
 ChatHandler.prototype.removeChatLinesFrom = function(userName) {
     var messagesToDelete = this.chatBox.find('div[data-sender="' + userName + '"]');
 
@@ -308,6 +312,10 @@ TwitchChat.prototype.addMessage = function(message, messageType) {
     var chatLine = this.getChatLine(message.message, message.user, messageType);
     
     this.chatHandler.addChatLine(chatLine);
+}
+
+TwitchChat.prototype.deleteAllMessages = function() {
+    this.chatHandler.removeAllChatLines();
 }
 
 TwitchChat.prototype.deleteMessages = function(userName) {
@@ -365,5 +373,9 @@ $(document).ready(function() {
     
     twitchChat.socket.on('clear_chat', function(userName) {
         twitchChat.deleteMessages(userName);
+    });
+
+    twitchChat.socket.on('clear_all_chat', function() {
+        twitchChat.deleteAllMessages();
     });
 });

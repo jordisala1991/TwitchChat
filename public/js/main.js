@@ -44,4 +44,8 @@ $(document).ready(function() {
     twitchChat.socket.on('clear_chat', function(userName) {
         twitchChat.deleteMessages(userName);
     });
+
+    twitchChat.socket.on('clear_all_chat', function() {
+        twitchChat.deleteAllMessages();
+    });
 });

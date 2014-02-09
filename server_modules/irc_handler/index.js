@@ -57,10 +57,16 @@ IrcHandler.prototype.privateMessage = function(textMessage) {
         var command = textSplitted[0],
             userName = textSplitted[1];
 
+        if (command == jtvCommands[3]) io.sockets.emit('clear_chat', userName);
+    }
+    else if (textSplitted.length == 1) {
+        var command = textSplitted[0];
         if (command == jtvCommands[3]) {
-            io.sockets.emit('clear_chat', userName);
+            io.sockets.emit('clear_all_chat');
+            this.channelMessage('twitchnotify', 'Chat was cleared by a moderator');
         }
     }
+    else this.channelMessage('twitchnotify', textMessage);
 }
 
 IrcHandler.prototype.handleMessage = function(message) {
