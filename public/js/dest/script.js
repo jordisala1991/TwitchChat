@@ -364,6 +364,7 @@ $(document).ready(function() {
     });
 
     twitchChat.socket.on('message', function(message) {
+        console.log(message);
         twitchChat.addMessage(message, 'message');
     });
     
