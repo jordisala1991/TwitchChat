@@ -64,7 +64,7 @@ IrcHandler.prototype.privateMessage = function(textMessage, receiver) {
         case jtvCommands[4]:
             break;
         default:
-            textMessage = textMessage.replace('http', 'http://www.twitch.tv/' + configurations.channelName + '/subscribe');
+            textMessage = textMessage.replace('http', 'http://www.twitch.tv/' + configurations.channelName.substring(1) + '/subscribe');
             this.channelMessage('twitchnotify', textMessage, receiver);
     }
 }
