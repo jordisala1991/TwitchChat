@@ -1,4 +1,4 @@
-var twitchChat = new TwitchChat($('.chat-lines'));
+var twitchChat = new TwitchChat();
 
 Twitch.init({clientId: '1uzx8xlados5eqn7sb0pexoyuzkc1g9'}, function(error, status) {
     if (error) console.log(error);

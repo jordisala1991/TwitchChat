@@ -3,24 +3,27 @@ var Client = function(userName, oauth) {
     this.oauth = oauth;
     this.numberOfConnections = 1;
     this.connection = this.createIrcConnection();
-
 }
 
 Client.prototype.createIrcConnection = function() {
-    var options = {
-        nick: this.userName,
-        user: this.userName,
-        realname: this.userName,
-        server: configurations.connectionOptions.server,
-        port: configurations.connectionOptions.port,
-        secure: configurations.connectionOptions.secure,
-        password: this.oauth
-    };
+    var self = this,
+        options = {
+            nick: this.userName,
+            user: this.userName,
+            realname: this.userName,
+            server: configurations.connectionOptions.server,
+            port: configurations.connectionOptions.port,
+            secure: configurations.connectionOptions.secure,
+            password: this.oauth
+        };
 
     var connection = api.createClient(this.userName, options);
     api.hookEvent(this.userName, 'registered', function() {
         connection.irc.join(configurations.channelName);
     }, true);
+    api.hookEvent(this.userName, 'privmsg', function(message) {
+        irc_handler.handleMessage(message, self.userName);
+    });
 
     return connection;
 }
@@ -45,6 +48,7 @@ Client.prototype.connect = function() {
 Client.prototype.disconnect = function() {
     --this.numberOfConnections;
     if (this.numberOfConnections == 0) {
+        api.unhookEvent(this.userName, 'privmsg');
         api.destroyClient(this.userName);
     }
 }

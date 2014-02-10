@@ -28,54 +28,53 @@ IrcHandler.prototype.userModeChanged = function(message) {
     }
 }
 
-IrcHandler.prototype.channelMessage = function(userName, textMessage) {
+IrcHandler.prototype.channelMessage = function(userName, textMessage, receiver) {
     var user = this.getUser(userName),
         textMessage = this.entities.encode(textMessage),
         message = { user: user, message: textMessage };
 
-    io.sockets.emit('message', message);
+    if (receiver === undefined) io.sockets.emit('message', message);
+    else io.sockets.in(receiver).emit('message', message);
 }
 
-IrcHandler.prototype.privateMessage = function(textMessage) {
-    var jtvCommands = ['USERCOLOR', 'SPECIALUSER', 'EMOTESET', 'CLEARCHAT'],
+IrcHandler.prototype.privateMessage = function(textMessage, receiver) {
+    var jtvCommands = ['USERCOLOR', 'SPECIALUSER', 'EMOTESET', 'CLEARCHAT', 'HISTORYEND'],
         textSplitted = textMessage.split(' ');
 
-    if (textSplitted.length == 3) {
-        var command = textSplitted[0],
-            userName = textSplitted[1],
-            value = textSplitted[2];
-
-        if (jtvCommands.contains(command)) {
-            var user = this.getUser(userName);
-
-            if (command == jtvCommands[0]) user.userColor = value;
-            else if (command == jtvCommands[1]) user.addUserMode(value);
-            else if (command == jtvCommands[2]) user.setEmoteSets(value);
-        }
+    switch(textSplitted[0]) {
+        case jtvCommands[0]:
+            var user = this.getUser(textSplitted[1]);
+            user.userColor = textSplitted[2];
+            break;
+        case jtvCommands[1]:
+            var user = this.getUser(textSplitted[1]);
+            user.addUserMode(textSplitted[2]);
+            break;
+        case jtvCommands[2]:
+            var user = this.getUser(textSplitted[1])
+            user.setEmoteSets(textSplitted[1]);
+            break;
+        case jtvCommands[3]:
+            if (textSplitted.length > 1) io.sockets.emit('clear_chat', textSplitted[1]);
+            else {
+                io.sockets.emit('clear_all_chat');
+                this.channelMessage('twitchnotify', 'Chat was cleared by a moderator', receiver);
+            }
+            break;
+        case jtvCommands[4]:
+            break;
+        default:
+            this.channelMessage('twitchnotify', textMessage, receiver);
     }
-    else if (textSplitted.length == 2) {
-        var command = textSplitted[0],
-            userName = textSplitted[1];
-
-        if (command == jtvCommands[3]) io.sockets.emit('clear_chat', userName);
-    }
-    else if (textSplitted.length == 1) {
-        var command = textSplitted[0];
-        if (command == jtvCommands[3]) {
-            io.sockets.emit('clear_all_chat');
-            this.channelMessage('twitchnotify', 'Chat was cleared by a moderator');
-        }
-    }
-    else this.channelMessage('twitchnotify', textMessage);
 }
 
-IrcHandler.prototype.handleMessage = function(message) {
+IrcHandler.prototype.handleMessage = function(message, receiver) {
     if (message.target == configurations.channelName) {
-        this.channelMessage(message.username, message.message);
+        this.channelMessage(message.username, message.message, receiver);
     } else {
         var rawSplitted = message.raw.split(':'),
             commandSplitted = rawSplitted[0].split(' ');
-        if (commandSplitted[0] = 'jtv') this.privateMessage(rawSplitted[2]);
+        if (commandSplitted[0] = 'jtv') this.privateMessage(rawSplitted[2], receiver);
     }
 }
 

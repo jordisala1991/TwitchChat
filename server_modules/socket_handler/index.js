@@ -9,12 +9,13 @@ SocketHandler.prototype.connection = function(socket) {
 
     socket.on('login', function(data) {
         userName = data.username;
+        socket.join(userName);
 
-        if (self.clients[data.username] === undefined) {
-            var client = self.clientFactory.create(data.username, data.oauth);
-            self.clients[data.username] = client;
+        if (self.clients[userName] === undefined) {
+            var client = self.clientFactory.create(userName, data.oauth);
+            self.clients[userName] = client;
         }
-        else self.clients[data.username].connect();
+        else self.clients[userName].connect();
     });
 
     socket.on('message_to_send', function(message) {
