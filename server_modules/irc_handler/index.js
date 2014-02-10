@@ -52,7 +52,7 @@ IrcHandler.prototype.privateMessage = function(textMessage, receiver) {
             break;
         case jtvCommands[2]:
             var user = this.getUser(textSplitted[1])
-            user.setEmoteSets(textSplitted[1]);
+            user.setEmoteSets(textSplitted[2]);
             break;
         case jtvCommands[3]:
             if (textSplitted.length > 1) io.sockets.emit('clear_chat', textSplitted[1]);

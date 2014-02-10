@@ -1,5 +1,5 @@
 var botName = 'nodejsbot',
-    channelName = '#jordism91';
+    channelName = '#guardsmanbob';
 
 var configurations = {
     channelName: channelName,
