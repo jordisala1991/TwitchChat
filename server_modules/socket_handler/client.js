@@ -22,7 +22,9 @@ Client.prototype.createIrcConnection = function() {
         connection.irc.join(configurations.channelName);
     }, true);
     api.hookEvent(this.userName, 'privmsg', function(message) {
-        irc_handler.handleMessage(message, self.userName);
+        if (message.target !== configurations.channelName) {
+            irc_handler.handleMessage(message, self.userName);
+        }
     });
 
     return connection;
