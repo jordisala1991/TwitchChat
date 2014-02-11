@@ -45,6 +45,8 @@ app.configure(function() {
 app.get('/', function(request, response) {
     express_handler.homeAction(request, response);
 });
-
+app.get('/redirect', function(request, response) {
+    express_handler.redirectAction(request, response);
+});
 
 server.listen(process.env.PORT || 5000);
