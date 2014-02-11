@@ -13,7 +13,6 @@
         "socket.io": "~0.9.16",
         "express": "~3.4.8",
         "irc-factory": "~1.2.6",
-        "html-entities": "~1.0.10",
         "request": "~2.33.0"
     },
     "devDependencies": {

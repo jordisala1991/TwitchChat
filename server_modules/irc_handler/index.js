@@ -2,9 +2,6 @@ var IrcHandler = function() {
     this.twitch = require('../twitch').create();
     this.userFactory = require('./user.js');
     this.users = [];
-    
-    var Entities = require('html-entities').XmlEntities;
-    this.entities = new Entities();
 }
 
 IrcHandler.prototype.getUser = function(userName) {
@@ -28,9 +25,17 @@ IrcHandler.prototype.userModeChanged = function(message) {
     }
 }
 
+IrcHandler.prototype.encodeMessage = function(textMessage) {
+    var encodedMessage = textMessage;
+
+    encodedMessage = encodedMessage.replace('<', '&lt;');
+    encodedMessage = encodedMessage.replace('>', '&gt;');
+    return encodedMessage;
+}
+
 IrcHandler.prototype.channelMessage = function(userName, textMessage, receiver) {
     var user = this.getUser(userName),
-        textMessage = this.entities.encode(textMessage),
+        textMessage = this.encodeMessage(textMessage),
         message = { user: user, message: textMessage };
 
     if (receiver === undefined) io.sockets.emit('message', message);
@@ -81,7 +86,7 @@ IrcHandler.prototype.handleMessage = function(message, receiver) {
 
 IrcHandler.prototype.actionMessage = function(userName, textMessage) {
     var user = this.getUser(userName),
-        textMessage = this.entities.encode(textMessage),
+        textMessage = this.encodeMessage(textMessage),
         message = { user: user, message: textMessage };
 
     io.sockets.emit('action', message);
