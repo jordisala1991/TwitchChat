@@ -162,9 +162,11 @@ EmoticonHandler.prototype.replaceEmoticons = function(textMessage, user) {
 
 EmoticonHandler.prototype.getUserBadges = function(user) {
     var icons = '';
+    
     for (var index = 0; index < user.userModes.length; index++) {
         var mode = user.userModes[index];
-        icons += this.badges[mode];
+
+        if (this.badges[mode] !== undefined) icons += this.badges[mode];
     };
     return icons;
 }
