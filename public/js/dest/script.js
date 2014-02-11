@@ -142,8 +142,10 @@ EmoticonHandler.prototype.replaceEmoticonSet = function(set, textMessage) {
 
     if (emoticonsSet !== undefined) {
         for (var index = 0; index < emoticonsSet.length; index++) {
-            var regExp = new RegExp(emoticonsSet[index].regex, 'g');
-            textMessage = textMessage.replace(regExp, emoticonsSet[index].html);
+            var emoticon = emoticonsSet[index],
+                regExp = new RegExp(emoticon.regex, 'g');
+
+            if (emoticon.html !== undefined) textMessage = textMessage.replace(regExp, emoticon.html);
         };
     }
     return textMessage;
@@ -348,8 +350,6 @@ Twitch.init({clientId: '1uzx8xlados5eqn7sb0pexoyuzkc1g9'}, function(error, statu
         $('.twitch-connect').show();
         $('.twitch-connect').click(function() {
             Twitch.login({
-                redirect_uri: 'http://twitch-chat.herokuapp.com/redirect',
-                popup: true,
                 scope: ['user_read', 'chat_login']
             });
         });

@@ -20,10 +20,6 @@ ExpressHandler.prototype.homeAction = function(request, response) {
     });
 }
 
-ExpressHandler.prototype.redirectAction = function(request, response) {
-    response.render('redirect');
-}
-
 module.exports.create = function() {
     return new ExpressHandler();
 }

@@ -10,8 +10,10 @@ EmoticonHandler.prototype.replaceEmoticonSet = function(set, textMessage) {
 
     if (emoticonsSet !== undefined) {
         for (var index = 0; index < emoticonsSet.length; index++) {
-            var regExp = new RegExp(emoticonsSet[index].regex, 'g');
-            textMessage = textMessage.replace(regExp, emoticonsSet[index].html);
+            var emoticon = emoticonsSet[index],
+                regExp = new RegExp(emoticon.regex, 'g');
+
+            if (emoticon.html !== undefined) textMessage = textMessage.replace(regExp, emoticon.html);
         };
     }
     return textMessage;
