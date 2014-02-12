@@ -18,7 +18,7 @@ Twitch.init({clientId: '1uzx8xlados5eqn7sb0pexoyuzkc1g9'}, function(error, statu
         $('.twitch-connect').show();
         $('.twitch-connect').click(function() {
             Twitch.login({
-                popup: true,
+                popup: false,
                 scope: ['user_read', 'chat_login']
             });
         });
