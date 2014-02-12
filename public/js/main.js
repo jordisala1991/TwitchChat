@@ -1,6 +1,6 @@
 var twitchChat = new TwitchChat();
 
-Twitch.init({clientId: '1uzx8xlados5eqn7sb0pexoyuzkc1g9'}, function(error, status) {
+Twitch.init({clientId: clientId}, function(error, status) {
     if (error) console.log(error);
 
     if (status.authenticated) {
@@ -18,6 +18,7 @@ Twitch.init({clientId: '1uzx8xlados5eqn7sb0pexoyuzkc1g9'}, function(error, statu
         $('.twitch-connect').show();
         $('.twitch-connect').click(function() {
             Twitch.login({
+                redirect_uri: baseUrl,
                 popup: false,
                 scope: ['user_read', 'chat_login']
             });

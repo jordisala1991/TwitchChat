@@ -3,25 +3,26 @@ var ExpressHandler = function() {
 }
 
 ExpressHandler.prototype.configure = function() {
+    app.engine('hbs', hbs.express3({
+        partialsDir: __dirname + '/../../views/partials',
+        defaultLayout: __dirname + '/../../views/layouts/base'
+    }));
+    app.locals({
+        'PROD_ENV': 'production' === app.settings.env
+    });
+
     app.use(express.compress());
     app.set('views', __dirname + '/../../views');
-    app.set('view engine', 'twig');
-    app.set('twig options', { 
-        strict_variables: false
-    });
+    app.set('view engine', 'hbs');
     app.use(express.static(__dirname + '/../../public', { maxAge: this.oneDay }));
 }
 
 ExpressHandler.prototype.homeAction = function(request, response) {
     response.render('index', {
-        'socketUrl': configurations.environment.baseUrl,
+        'baseUrl': configurations.environment.baseUrl,
         'channelName': configurations.channelName,
-        'environment': app.settings.env
+        'clientId': configurations.environment.clientId,
     });
-}
-
-ExpressHandler.prototype.redirectAction = function(request, response) {
-    response.render('redirect');
 }
 
 module.exports.create = function() {

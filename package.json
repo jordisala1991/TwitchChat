@@ -9,7 +9,7 @@
     "author": "Jordi",
     "license": "BSD-2-Clause",
     "dependencies": {
-        "twig": "~0.6.0",
+        "express-hbs": "~0.7.9",
         "socket.io": "~0.9.16",
         "express": "~3.4.8",
         "irc-factory": "~1.2.6",

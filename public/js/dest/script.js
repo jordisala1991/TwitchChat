@@ -278,7 +278,7 @@ ChatHandler.prototype.removeChatLinesFrom = function(userName) {
         $(this).find('span.message').text('<message deleted>');
     });
 };var TwitchChat = function() {
-    this.socket = io.connect(socketUrl);
+    this.socket = io.connect(baseUrl);
     this.templating = new Templating();
     this.chatHandler = new ChatHandler($('.chat-lines'));
     this.emoticonHandler = new EmoticonHandler();
@@ -331,7 +331,7 @@ TwitchChat.prototype.sendCredentials = function(userName, token) {
     this.socket.emit('login', { 'username': userName, 'oauth': 'oauth:' + token });
 };var twitchChat = new TwitchChat();
 
-Twitch.init({clientId: '1uzx8xlados5eqn7sb0pexoyuzkc1g9'}, function(error, status) {
+Twitch.init({clientId: clientId}, function(error, status) {
     if (error) console.log(error);
 
     if (status.authenticated) {
@@ -349,6 +349,7 @@ Twitch.init({clientId: '1uzx8xlados5eqn7sb0pexoyuzkc1g9'}, function(error, statu
         $('.twitch-connect').show();
         $('.twitch-connect').click(function() {
             Twitch.login({
+                redirect_uri: baseUrl,
                 popup: false,
                 scope: ['user_read', 'chat_login']
             });

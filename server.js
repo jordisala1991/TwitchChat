@@ -1,3 +1,4 @@
+hbs = require('express-hbs');
 factory = require('irc-factory');
 api = new factory.Api();
 express = require('express');
@@ -44,9 +45,6 @@ app.configure(function() {
 });
 app.get('/', function(request, response) {
     express_handler.homeAction(request, response);
-});
-app.get('/login-redirect', function(request, response) {
-    express_handler.redirectAction(request, response);
 });
 
 
