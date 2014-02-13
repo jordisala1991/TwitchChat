@@ -38,8 +38,8 @@ IrcHandler.prototype.channelMessage = function(userName, textMessage, receiver) 
         textMessage = this.encodeMessage(textMessage),
         message = { user: user, message: textMessage };
 
-    if (receiver === undefined) io.sockets.emit('message', message);
-    else io.sockets.in(receiver).emit('message', message);
+    if (receiver === undefined) io.sockets.json.emit('message', message);
+    else io.sockets.in(receiver).json.emit('message', message);
 }
 
 IrcHandler.prototype.privateMessage = function(textMessage, receiver) {
@@ -89,7 +89,7 @@ IrcHandler.prototype.actionMessage = function(userName, textMessage) {
         textMessage = this.encodeMessage(textMessage),
         message = { user: user, message: textMessage };
 
-    io.sockets.emit('action', message);
+    io.sockets.json.emit('action', message);
 }
 
 IrcHandler.prototype.handleAction = function(message) {

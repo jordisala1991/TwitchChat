@@ -328,7 +328,7 @@ TwitchChat.prototype.sendMessage = function(textMessage) {
 }
 
 TwitchChat.prototype.sendCredentials = function(userName, token) {
-    this.socket.emit('login', { 'username': userName, 'oauth': 'oauth:' + token });
+    this.socket.json.emit('login', { 'username': userName, 'oauth': 'oauth:' + token });
 };var twitchChat = new TwitchChat();
 
 Twitch.init({clientId: clientId}, function(error, status) {
