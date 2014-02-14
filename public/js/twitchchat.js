@@ -3,6 +3,7 @@ var TwitchChat = function() {
     this.templating = new Templating();
     this.chatHandler = new ChatHandler($('.chat-lines'), $('.chat-input'));
     this.emoticonHandler = new EmoticonHandler();
+    this.userName = '';
 }
 
 TwitchChat.prototype.getMessageColor = function(user, textMessage) {
@@ -44,14 +45,16 @@ TwitchChat.prototype.deleteMessages = function(userName) {
     this.chatHandler.removeChatLinesFrom(userName);
 }
 
-TwitchChat.prototype.sendMessage = function(textMessage, eventSender) {
+TwitchChat.prototype.sendMessage = function(textMessage, eventAction) {
     if (textMessage != '') {
         this.socket.emit('message_to_send', textMessage);
         this.chatHandler.clearChatInput();
-        this.chatHandler.trackEvent('Chat', 'Message', 'chat-message-' + eventSender);
+        this.chatHandler.trackEvent('Sending Messages', eventAction, this.userName);
     }
 }
 
 TwitchChat.prototype.sendCredentials = function(userName, token) {
+    this.userName = userName;
+    this.chatHandler.trackEvent('Twitch Login', 'Succesful Login', this.userName);
     this.socket.json.emit('login', { 'username': userName, 'oauth': 'oauth:' + token });
 }

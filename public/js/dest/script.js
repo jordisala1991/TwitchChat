@@ -293,6 +293,7 @@ ChatHandler.prototype.trackEvent = function(category, action, label) {
     this.templating = new Templating();
     this.chatHandler = new ChatHandler($('.chat-lines'), $('.chat-input'));
     this.emoticonHandler = new EmoticonHandler();
+    this.userName = '';
 }
 
 TwitchChat.prototype.getMessageColor = function(user, textMessage) {
@@ -334,15 +335,17 @@ TwitchChat.prototype.deleteMessages = function(userName) {
     this.chatHandler.removeChatLinesFrom(userName);
 }
 
-TwitchChat.prototype.sendMessage = function(textMessage, eventSender) {
+TwitchChat.prototype.sendMessage = function(textMessage, eventAction) {
     if (textMessage != '') {
         this.socket.emit('message_to_send', textMessage);
         this.chatHandler.clearChatInput();
-        this.chatHandler.trackEvent('Chat', 'Message', 'chat-message-' + eventSender);
+        this.chatHandler.trackEvent('Sending Messages', eventAction, this.userName);
     }
 }
 
 TwitchChat.prototype.sendCredentials = function(userName, token) {
+    this.userName = userName;
+    this.chatHandler.trackEvent('Twitch Login', 'Succesful Login', this.userName);
     this.socket.json.emit('login', { 'username': userName, 'oauth': 'oauth:' + token });
 };var twitchChat = new TwitchChat();
 
@@ -363,7 +366,7 @@ Twitch.init({clientId: clientId}, function(error, status) {
         $('.chat-input').attr('disabled', 'disabled');
         $('.twitch-connect').show();
         $('.twitch-connect').click(function() {
-            twitchChat.chatHandler.trackEvent('Chat', 'Login', 'login-button-click');
+            twitchChat.chatHandler.trackEvent('Twitch Login', 'Button');
             Twitch.login({
                 redirect_uri: baseUrl,
                 popup: false,
@@ -376,13 +379,13 @@ Twitch.init({clientId: clientId}, function(error, status) {
 $(document).ready(function() {
     $('.chat-input').keypress(function(e) {
         if (e.which == 13) {
-            twitchChat.sendMessage($('.chat-input').val(), 'keyboard');
+            twitchChat.sendMessage($('.chat-input').val(), 'Keyboard');
             e.preventDefault();
         }
     });
 
     $('.send-chat-message').click(function() {
-        twitchChat.sendMessage($('.chat-input').val(), 'button');
+        twitchChat.sendMessage($('.chat-input').val(), 'Button');
     });
 
     twitchChat.socket.on('message', function(message) {
