@@ -236,9 +236,10 @@ EmoticonHandler.prototype.initializeEmoticons = function() {
         delete badges['_links'];
         self.setBadges(badges);
     });
-};var ChatHandler = function(chatBox) {
+};var ChatHandler = function(chatBox, chatInput) {
     this.messageCount = 1;
     this.chatBox = chatBox;
+    this.chatInput = chatInput;
     this.maxChatMessages = 150;
 }
 
@@ -277,10 +278,20 @@ ChatHandler.prototype.removeChatLinesFrom = function(userName) {
         $(this).removeClass().addClass('chat-line').addClass('grey');
         $(this).find('span.message').text('<message deleted>');
     });
+}
+
+ChatHandler.prototype.clearChatInput = function() {
+    this.chatInput.val('');
+}
+
+ChatHandler.prototype.trackEvent = function(category, action, label) {
+    if (typeof ga !== undefined) {
+        ga('send', 'event', category, action, label);        
+    }
 };var TwitchChat = function() {
     this.socket = io.connect(baseUrl);
     this.templating = new Templating();
-    this.chatHandler = new ChatHandler($('.chat-lines'));
+    this.chatHandler = new ChatHandler($('.chat-lines'), $('.chat-input'));
     this.emoticonHandler = new EmoticonHandler();
 }
 
@@ -323,8 +334,12 @@ TwitchChat.prototype.deleteMessages = function(userName) {
     this.chatHandler.removeChatLinesFrom(userName);
 }
 
-TwitchChat.prototype.sendMessage = function(textMessage) {
-    if (textMessage != '') this.socket.emit('message_to_send', textMessage);
+TwitchChat.prototype.sendMessage = function(textMessage, eventSender) {
+    if (textMessage != '') {
+        this.socket.emit('message_to_send', textMessage);
+        this.chatHandler.clearChatInput();
+        this.chatHandler.trackEvent('Chat', 'Message', 'chat-message-' + eventSender);
+    }
 }
 
 TwitchChat.prototype.sendCredentials = function(userName, token) {
@@ -348,6 +363,7 @@ Twitch.init({clientId: clientId}, function(error, status) {
         $('.chat-input').attr('disabled', 'disabled');
         $('.twitch-connect').show();
         $('.twitch-connect').click(function() {
+            twitchChat.chatHandler.trackEvent('Chat', 'Login', 'login-button-click');
             Twitch.login({
                 redirect_uri: baseUrl,
                 popup: false,
@@ -360,15 +376,13 @@ Twitch.init({clientId: clientId}, function(error, status) {
 $(document).ready(function() {
     $('.chat-input').keypress(function(e) {
         if (e.which == 13) {
+            twitchChat.sendMessage($('.chat-input').val(), 'keyboard');
             e.preventDefault();
-            twitchChat.sendMessage($('.chat-input').val());
-            $('.chat-input').val('');
         }
     });
 
     $('.send-chat-message').click(function() {
-        twitchChat.sendMessage($('.chat-input').val());
-        $('.chat-input').val('');
+        twitchChat.sendMessage($('.chat-input').val(), 'button');
     });
 
     twitchChat.socket.on('message', function(message) {

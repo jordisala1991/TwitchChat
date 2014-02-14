@@ -1,6 +1,7 @@
-var ChatHandler = function(chatBox) {
+var ChatHandler = function(chatBox, chatInput) {
     this.messageCount = 1;
     this.chatBox = chatBox;
+    this.chatInput = chatInput;
     this.maxChatMessages = 150;
 }
 
@@ -39,4 +40,14 @@ ChatHandler.prototype.removeChatLinesFrom = function(userName) {
         $(this).removeClass().addClass('chat-line').addClass('grey');
         $(this).find('span.message').text('<message deleted>');
     });
+}
+
+ChatHandler.prototype.clearChatInput = function() {
+    this.chatInput.val('');
+}
+
+ChatHandler.prototype.trackEvent = function(category, action, label) {
+    if (typeof ga !== undefined) {
+        ga('send', 'event', category, action, label);        
+    }
 }

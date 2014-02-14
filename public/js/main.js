@@ -17,6 +17,7 @@ Twitch.init({clientId: clientId}, function(error, status) {
         $('.chat-input').attr('disabled', 'disabled');
         $('.twitch-connect').show();
         $('.twitch-connect').click(function() {
+            twitchChat.chatHandler.trackEvent('Chat', 'Login', 'login-button-click');
             Twitch.login({
                 redirect_uri: baseUrl,
                 popup: false,
@@ -29,15 +30,13 @@ Twitch.init({clientId: clientId}, function(error, status) {
 $(document).ready(function() {
     $('.chat-input').keypress(function(e) {
         if (e.which == 13) {
+            twitchChat.sendMessage($('.chat-input').val(), 'keyboard');
             e.preventDefault();
-            twitchChat.sendMessage($('.chat-input').val());
-            $('.chat-input').val('');
         }
     });
 
     $('.send-chat-message').click(function() {
-        twitchChat.sendMessage($('.chat-input').val());
-        $('.chat-input').val('');
+        twitchChat.sendMessage($('.chat-input').val(), 'button');
     });
 
     twitchChat.socket.on('message', function(message) {
