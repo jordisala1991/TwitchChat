@@ -26,10 +26,12 @@ IrcHandler.prototype.userModeChanged = function(message) {
 }
 
 IrcHandler.prototype.encodeMessage = function(textMessage) {
-    var encodedMessage = textMessage;
+    var encodedMessage = textMessage,
+        regExp1 = new RegExp('<', 'g'),
+        regExp2 = new RegExp('<', 'g');
 
-    encodedMessage = encodedMessage.replace('<', '&lt;');
-    encodedMessage = encodedMessage.replace('>', '&gt;');
+    encodedMessage = encodedMessage.replace(regExp1, '&lt;');
+    encodedMessage = encodedMessage.replace(regExp2, '&gt;');
     return encodedMessage;
 }
 

@@ -47,7 +47,7 @@ ChatHandler.prototype.clearChatInput = function() {
 }
 
 ChatHandler.prototype.trackEvent = function(category, action, label) {
-    if (typeof ga !== undefined) {
+    if (typeof ga !== 'undefined') {
         ga('send', 'event', category, action, label);        
     }
 }
