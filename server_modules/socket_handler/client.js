@@ -18,9 +18,16 @@ Client.prototype.createIrcConnection = function() {
         };
 
     var connection = api.createClient(this.userName, options);
-    api.hookEvent(this.userName, 'registered', function() {
-        connection.irc.join(configurations.channelName);
-    }, true);
+    api.hookEvent(this.userName, 'registered', function(message) {
+        if (message.capabilities.network.hostname == 'tmi.twitch.tv') {
+            connection.irc.join(configurations.channelName);
+        }
+    });
+    api.hookEvent(this.userName, 'join', function(message) {
+        if (message.username == self.userName) {
+            irc_handler.channelMessage('twitchnotify', 'Connected to the channel, now you can send messages', self.userName);
+        }
+    });
     api.hookEvent(this.userName, 'privmsg', function(message) {
         if (message.target !== configurations.channelName) {
             irc_handler.handleMessage(message, self.userName);
@@ -37,20 +44,15 @@ Client.prototype.sendChannelMessage = function(message) {
 
 Client.prototype.connect = function() {
     ++this.numberOfConnections;
-    if (this.connection.irc.isConnected() === false) {
-        this.connection.irc.reconnect();
-
-        var connection = this.connection;
-        api.hookEvent(this.userName, 'registered', function() {
-            connection.irc.join(configurations.channelName);
-        }, true);
-    }
+    if (this.connection.irc.isConnected() === false) this.connection.irc.reconnect();
 }
 
 Client.prototype.disconnect = function() {
     --this.numberOfConnections;
     if (this.numberOfConnections == 0) {
         api.unhookEvent(this.userName, 'privmsg');
+        api.unhookEvent(this.userName, 'join');
+        api.unhookEvent(this.userName, 'registered');
         api.destroyClient(this.userName);
     }
 }

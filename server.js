@@ -20,8 +20,10 @@ var client = api.createClient(configurations.botName, configurations.connectionO
 irc_handler = require('./server_modules/irc_handler').create();
 
 api.hookEvent(configurations.botName, 'registered', function(message) {
-    client.irc.raw('TWITCHCLIENT');
-    client.irc.join(configurations.channelName);
+    if (message.capabilities.network.hostname == 'tmi.twitch.tv') {
+        client.irc.raw('TWITCHCLIENT');
+        client.irc.join(configurations.channelName);
+    }
 });
 api.hookEvent(configurations.botName, 'privmsg', function(message) {
     irc_handler.handleMessage(message);

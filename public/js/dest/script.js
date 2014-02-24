@@ -251,8 +251,8 @@ ChatHandler.prototype.scrollDown = function() {
     this.chatBox.scrollTop(this.chatBox[0].scrollHeight);
 }
 
-ChatHandler.prototype.deleteFirstMessage = function() {
-    if (this.messageCount > this.maxChatMessages) {
+ChatHandler.prototype.deleteFirstMessages = function() {
+    while (this.messageCount > this.maxChatMessages) {
         --this.messageCount;
         this.chatBox.find('.chat-line').first().remove();
     }
@@ -263,8 +263,10 @@ ChatHandler.prototype.addChatLine = function(chatLine) {
 
     ++this.messageCount;
     this.chatBox.append(chatLine);
-    this.deleteFirstMessage();
-    if (shouldScroll) this.scrollDown();
+    if (shouldScroll) {
+        this.deleteFirstMessages();
+        this.scrollDown();
+    }
 }
 
 ChatHandler.prototype.removeAllChatLines = function() {
