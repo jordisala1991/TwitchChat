@@ -1,29 +1,29 @@
 {
-    "name": "Irc",
-    "version": "0.0.0",
-    "description": "This is an IRC Client",
-    "main": "server.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "author": "Jordi",
-    "license": "BSD-2-Clause",
-    "dependencies": {
-        "express-hbs": "~0.7.9",
-        "socket.io": "~0.9.16",
-        "express": "~3.4.8",
-        "irc-factory": "~1.3.0",
-        "request": "~2.34.0"
-    },
-    "devDependencies": {
-        "grunt": "~0.4.2",
-        "grunt-contrib-uglify": "~0.2.7",
-        "grunt-contrib-cssmin": "~0.7.0",
-        "grunt-contrib-watch": "~0.5.3",
-        "grunt-contrib-concat": "~0.3.0"
-    },
-    "repository": {},
-    "engines": {
-        "node": "0.10.x"
-    }
+  "name": "Irc",
+  "version": "0.0.0",
+  "description": "This is an IRC Client",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jordi",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "express-hbs": "~0.7.9",
+    "socket.io": "~0.9.16",
+    "express": "~3.4.8",
+    "irc-factory": "~1.3.1",
+    "request": "~2.34.0",
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-uglify": "~0.2.7",
+    "grunt-contrib-cssmin": "~0.7.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-concat": "~0.3.0"
+  },
+  "repository": {},
+  "engines": {
+    "node": "0.10.x"
+  }
 }

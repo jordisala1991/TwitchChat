@@ -19,9 +19,7 @@ Client.prototype.createIrcConnection = function() {
 
     var connection = api.createClient(this.userName, options);
     api.hookEvent(this.userName, 'registered', function(message) {
-        if (message.capabilities.network.hostname == 'tmi.twitch.tv') {
-            connection.irc.join(configurations.channelName);
-        }
+        connection.irc.join(configurations.channelName);
     });
     api.hookEvent(this.userName, 'join', function(message) {
         if (message.username == self.userName) {
