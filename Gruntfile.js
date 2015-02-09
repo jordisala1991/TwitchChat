@@ -7,15 +7,22 @@ module.exports = function(grunt) {
                 separator: ';'
             },
             dist: {
-                src: ['public/js/plugins.js',
-                      'public/js/functions.js',
-                      'public/js/templating.js',
-                      'public/js/emoticonhandler.js',
-                      'public/js/chathandler.js',
-                      'public/js/twitchchat.js',
-                      'public/js/main.js'],
-                      
-                dest: 'public/js/dest/script.js'
+                src: ['public/js/components/functions.js',
+                      'public/js/components/templating.js',
+                      'public/js/components/emoticonhandler.js',
+                      'public/js/components/chathandler.js',
+                      'public/js/components/twitchchat.js',
+                      'public/js/components/main.js'],
+
+                dest: 'public/js/script.js'
+            },
+            polyfills: {
+                src: 'public/js/polyfills/*.js',
+                dest: 'public/js/polyfills.js'
+            },
+            vendor: {
+                src: 'public/js/vendor/*.js',
+                dest: 'public/js/vendor.js'
             }
         },
         cssmin: {
@@ -31,11 +38,29 @@ module.exports = function(grunt) {
         uglify: {
             options: {
                 banner: '/*! script <%= grunt.template.today("dd-mm-yyyy") %> */\n',
-                compress: true
+                compress: false
             },
             dist: {
                 files: {
-                    'public/js/dest/script.min.js': ['<%= concat.dist.dest %>']
+                    'public/js/script.min.js': ['<%= concat.dist.dest %>'],
+                    'public/js/polyfills.min.js': ['<%= concat.polyfills.dest %>'],
+                    'public/js/vendor.min.js': ['<%= concat.vendor.dest %>']
+                }
+            }
+        },
+        bower: {
+            dev: {
+                dest: 'public/js/vendor/',
+                options: {
+                    packageSpecific: {
+                        selectivizr: {
+                            dest: 'public/js/polyfills/'
+                        },
+                        html5shiv: {
+                            dest: 'public/js/polyfills/'
+                        }
+                    },
+                    keepExpandedHierarchy: false
                 }
             }
         },
@@ -55,6 +80,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-bower');
 
-    grunt.registerTask('default', ['concat', 'uglify', 'cssmin']);
+    grunt.registerTask('default', ['bower', 'concat', 'uglify', 'cssmin']);
 };

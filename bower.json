@@ -1,0 +1,14 @@
+{
+  "name": "Irc",
+  "version": "1.0.0",
+  "description": "Irc Client",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "jquery": "latest",
+    "selectivizr": "latest",
+    "moment": "latest",
+    "socket.io-client": "latest",
+    "html5shiv": "latest"
+  }
+}

@@ -35,7 +35,6 @@ api.hookEvent(configurations.botName, 'action', function(message) {
 });
 
 
-io.set('log level', 1);
 io.sockets.on('connection', function(socket) {
     socket_handler.connection(socket);
 });
