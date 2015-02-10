@@ -1,7 +1,9 @@
-hbs = require('express-hbs');
+exphbs = require('express-handlebars');
 factory = require('irc-factory');
 api = new factory.Api();
 express = require('express');
+compression = require('compression');
+serveStatic = require('serve-static');
 http = require('http');
 app = express();
 server = http.createServer(app);
@@ -40,9 +42,7 @@ io.sockets.on('connection', function(socket) {
 });
 
 
-app.configure(function() {
-    express_handler.configure();
-});
+express_handler.configure();
 app.get('/', function(request, response) {
     express_handler.homeAction(request, response);
 });

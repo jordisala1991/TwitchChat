@@ -3,18 +3,17 @@ var ExpressHandler = function() {
 }
 
 ExpressHandler.prototype.configure = function() {
-    app.engine('hbs', hbs.express3({
-        partialsDir: __dirname + '/../../views/partials',
+    app.use(compression());
+    app.use(serveStatic(__dirname + '/../../public', { maxAge: this.oneDay }));
+
+    app.engine('handlebars', exphbs({
         defaultLayout: __dirname + '/../../views/layouts/base'
     }));
-    app.locals({
-        'PROD_ENV': 'production' === app.settings.env
-    });
 
-    app.use(express.compress());
-    app.set('views', __dirname + '/../../views');
-    app.set('view engine', 'hbs');
-    app.use(express.static(__dirname + '/../../public', { maxAge: this.oneDay }));
+    app.set('view engine', 'handlebars');
+    app.set('cache view');
+
+    app.locals.PROD_ENV = 'production' === app.settings.env;
 }
 
 ExpressHandler.prototype.homeAction = function(request, response) {
