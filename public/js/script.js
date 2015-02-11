@@ -11,22 +11,27 @@ String.prototype.linkify = function() {
     return replacedText;
 }
 
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
 Array.prototype.contains = function(object) {
     var index = this.length;
     while (index--) {
         if (this[index] === object) return true;
     }
     return false;
-};var Templating = function() {
+}
+;var Templating = function() {
 
 }
 
 Templating.prototype.messageTemplating = function(data) {
-    var messageTemplate = 
+    var messageTemplate =
         '<div class="chat-line {MESSAGE_COLOR}" data-sender="{SENDER}">' +
-            '<span>[{DATE}]</span>' +
+            '<span class="time">{DATE}</span>' +
             '{USER_BADGES_ICONS}' +
-            '<span class="user-name" style="color: {USER_COLOR}">&lt;{USER_NAME}&gt;</span>' +
+            '<span class="user-name" style="color: {USER_COLOR}">{USER_NAME}:</span>' +
             '<span class="message">{MESSAGE}</span>' +
         '</div>';
 
@@ -34,7 +39,7 @@ Templating.prototype.messageTemplating = function(data) {
     messageTemplate = messageTemplate.replace("{DATE}", data.messageDate);
     messageTemplate = messageTemplate.replace("{USER_COLOR}", data.userColor);
     messageTemplate = messageTemplate.replace("{USER_NAME}", data.userName);
-    messageTemplate = messageTemplate.replace("{SENDER}", data.userName);
+    messageTemplate = messageTemplate.replace("{SENDER}", data.sender);
     messageTemplate = messageTemplate.replace("{MESSAGE}", data.textMessage);
     messageTemplate = messageTemplate.replace("{USER_BADGES_ICONS}", data.userBadges);
 
@@ -42,9 +47,9 @@ Templating.prototype.messageTemplating = function(data) {
 }
 
 Templating.prototype.actionTemplating = function(data) {
-    var messageTemplate = 
+    var messageTemplate =
         '<div class="chat-line {MESSAGE_COLOR}" data-sender="{SENDER}">' +
-            '<span>[{DATE}]</span>' +
+            '<span class="time">{DATE}</span>' +
             '{USER_BADGES_ICONS}' +
             '<span class="user-name" style="color: {USER_COLOR}">&bull; {USER_NAME}</span>' +
             '<span class="message">{MESSAGE}</span>' +
@@ -54,7 +59,7 @@ Templating.prototype.actionTemplating = function(data) {
     messageTemplate = messageTemplate.replace("{DATE}", data.messageDate);
     messageTemplate = messageTemplate.replace("{USER_COLOR}", data.userColor);
     messageTemplate = messageTemplate.replace("{USER_NAME}", data.userName);
-    messageTemplate = messageTemplate.replace("{SENDER}", data.userName);
+    messageTemplate = messageTemplate.replace("{SENDER}", data.sender);
     messageTemplate = messageTemplate.replace("{MESSAGE}", data.textMessage);
     messageTemplate = messageTemplate.replace("{USER_BADGES_ICONS}", data.userBadges);
 
@@ -96,7 +101,8 @@ Templating.prototype.badgeTemplating = function(badge) {
     badgeTemplate = badgeTemplate.replace("{BADGE}", badge);
 
     return badgeTemplate;
-};var EmoticonHandler = function() {
+}
+;var EmoticonHandler = function() {
     this.emoticons = [];
     this.badges = [];
     this.templating = new Templating();
@@ -280,7 +286,8 @@ TwitchChat.prototype.getChatLine = function(textMessage, user, messageType) {
         processedMessage = this.emoticonHandler.replaceEmoticons(message, user),
         userBadges = this.emoticonHandler.getUserBadges(user),
         templateData = {
-            userName: user.userName,
+            userName: user.userName.capitalize(),
+            sender: user.userName,
             userColor: user.userColor,
             messageColor: this.getMessageColor(user, processedMessage),
             messageDate: moment().format('HH:mm'),
@@ -294,7 +301,7 @@ TwitchChat.prototype.getChatLine = function(textMessage, user, messageType) {
 
 TwitchChat.prototype.addMessage = function(message, messageType) {
     var chatLine = this.getChatLine(message.message, message.user, messageType);
-    
+
     this.chatHandler.addChatLine(chatLine);
 }
 
@@ -318,7 +325,8 @@ TwitchChat.prototype.sendCredentials = function(userName, token) {
     this.userName = userName;
     this.chatHandler.trackEvent('Twitch Login', 'Succesful Login', this.userName);
     this.socket.json.emit('login', { 'username': userName, 'oauth': 'oauth:' + token });
-};var twitchChat = new TwitchChat();
+}
+;var twitchChat = new TwitchChat();
 
 Twitch.init({clientId: clientId}, function(error, status) {
     if (error) console.log(error);

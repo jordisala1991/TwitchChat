@@ -19,7 +19,8 @@ TwitchChat.prototype.getChatLine = function(textMessage, user, messageType) {
         processedMessage = this.emoticonHandler.replaceEmoticons(message, user),
         userBadges = this.emoticonHandler.getUserBadges(user),
         templateData = {
-            userName: user.userName,
+            userName: user.userName.capitalize(),
+            sender: user.userName,
             userColor: user.userColor,
             messageColor: this.getMessageColor(user, processedMessage),
             messageDate: moment().format('HH:mm'),
@@ -33,7 +34,7 @@ TwitchChat.prototype.getChatLine = function(textMessage, user, messageType) {
 
 TwitchChat.prototype.addMessage = function(message, messageType) {
     var chatLine = this.getChatLine(message.message, message.user, messageType);
-    
+
     this.chatHandler.addChatLine(chatLine);
 }
 
