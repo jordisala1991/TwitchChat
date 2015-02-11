@@ -8,7 +8,6 @@ http = require('http');
 app = express();
 server = http.createServer(app);
 io = require('socket.io').listen(server);
-require('./server_modules/general_functions');
 configurations = require('./server_modules/configurations');
 request = require('request');
 fs = require('fs');

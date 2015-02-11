@@ -6,7 +6,7 @@ var User = function(name) {
 }
 
 User.prototype.addUserMode = function(mode) {
-    if (!this.userModes.contains(mode)) this.userModes.push(mode);
+    if (this.userModes.indexOf(mode) === -1) this.userModes.push(mode);
 }
 
 User.prototype.setEmoteSets = function(emoteSets) {

@@ -6,7 +6,7 @@ var IrcHandler = function() {
 
 IrcHandler.prototype.getUser = function(userName) {
     var user;
-    
+
     if (this.users[userName] !== undefined) user = this.users[userName];
     else {
         user = this.userFactory.create(userName);
@@ -21,7 +21,7 @@ IrcHandler.prototype.userModeChanged = function(message) {
     var modeSplitted = message.mode.split(' ');
     if (modeSplitted[0] == '+o') {
         var user = this.getUser(modeSplitted[1]);
-        if (!user.userModes.contains('broadcaster')) user.addUserMode('mod');
+        if (user.userModes.indexOf('broadcaster') === -1) user.addUserMode('mod');
     }
 }
 
