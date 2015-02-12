@@ -2,6 +2,7 @@ var IrcHandler = function() {
     this.twitch = require('../twitch').create();
     this.userFactory = require('./user.js');
     this.users = [];
+    this.connectedUsers = [];
 }
 
 IrcHandler.prototype.getUser = function(userName) {
@@ -96,6 +97,20 @@ IrcHandler.prototype.actionMessage = function(userName, textMessage) {
 
 IrcHandler.prototype.handleAction = function(message) {
     this.actionMessage(message.username, message.message);
+}
+
+IrcHandler.prototype.handleJoin = function(message) {
+    this.connectedUsers.push(message.userName);
+}
+
+IrcHandler.prototype.handlePart = function(message) {
+    var index = this.connectedUsers.indexOf(message.userName);
+
+    if (index > -1) this.connectedUsers.splice(index, 1);
+}
+
+IrcHandler.prototype.handleNamesList = function(message) {
+    this.connectedUsers = message.names;
 }
 
 module.exports.create = function() {

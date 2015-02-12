@@ -22,8 +22,17 @@ irc_handler = require('./server_modules/irc_handler').create();
 
 
 api.hookEvent(configurations.botName, 'registered', function(message) {
-    client.irc.raw('TWITCHCLIENT');
+    client.irc.raw('TWITCHCLIENT 1');
     client.irc.join(configurations.channelName);
+});
+api.hookEvent(configurations.botName, 'names', function(message) {
+    irc_handler.handleNamesList(message);
+});
+api.hookEvent(configurations.botName, 'join', function(message) {
+    irc_handler.handleJoin(message);
+});
+api.hookEvent(configurations.botName, 'part', function(message) {
+    irc_handler.handlePart(message);
 });
 api.hookEvent(configurations.botName, 'privmsg', function(message) {
     irc_handler.handleMessage(message);

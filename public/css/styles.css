@@ -94,7 +94,7 @@ h1 {
     margin: 10px 15px;
     height: 75%;
     width: 85%;
-    padding: 4px;
+    padding: 7px;
     resize: none;
     border: 1px solid rgba(0, 0, 0, 0.35);
 }
@@ -123,7 +123,8 @@ h1 {
 }
 
 .chat-line {
-    margin-bottom: 5px;
+    padding: 4px 0;
+    line-height: 20px;
 }
 
 .chat-line > span {
