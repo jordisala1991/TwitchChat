@@ -69,13 +69,13 @@ Templating.prototype.actionTemplating = function(data) {
 Templating.prototype.emoticonTemplating = function(data) {
     var emoticonTemplate =
         '<span class="emoticon" style="' +
-            'background-image: url({BACKGROUND_IMAGE}); ' +
+            'background-image: url(//static-cdn.jtvnw.net/emoticons/v1/{ID}/1.0); ' +
             'height: {HEIGHT}px; ' +
             'width: {WIDTH}px; ' +
             'margin: {MARGIN_TOP}px 0px;">' +
         '</span>';
 
-    emoticonTemplate = emoticonTemplate.replace("{BACKGROUND_IMAGE}", data.emoticonUrl);
+    emoticonTemplate = emoticonTemplate.replace("{ID}", data.emoticonId);
     emoticonTemplate = emoticonTemplate.replace("{HEIGHT}", data.emoticonHeight);
     emoticonTemplate = emoticonTemplate.replace("{WIDTH}", data.emoticonWidth);
     emoticonTemplate = emoticonTemplate.replace("{MARGIN_TOP}", data.emoticonMargins);
@@ -134,7 +134,7 @@ EmoticonHandler.prototype.replaceEmoticons = function(textMessage, user) {
 
 EmoticonHandler.prototype.getUserBadges = function(user) {
     var icons = '';
-    
+
     for (var index = 0; index < user.userModes.length; index++) {
         var mode = user.userModes[index];
 
@@ -153,35 +153,28 @@ EmoticonHandler.prototype.addToGeneralEmoticons = function(emoticon) {
     this.emoticons['general'].push(emoticon);
 }
 
-EmoticonHandler.prototype.buildEmoticon = function(rawEmoticon, image) {
+EmoticonHandler.prototype.buildEmoticon = function(rawEmoticon) {
     var emoticonHtml = this.templating.emoticonTemplating({
-            emoticonUrl: image.url,
-            emoticonHeight: image.height,
-            emoticonWidth: image.width,
-            emoticonMargins: (18 - image.height)/2
-        }),    
-        emoticon = {
-            regex: rawEmoticon.regex,
-            url: image.url,
-            height: image.height,
-            width: image.width,
-            html: emoticonHtml
-        };
+        emoticonId: rawEmoticon.id,
+        emoticonHeight: 24,
+        emoticonWidth: 24,
+        emoticonMargins: -5
+    });
 
-    return emoticon;
+    return {
+        regex: rawEmoticon.code,
+        html: emoticonHtml
+    };
 }
 
 EmoticonHandler.prototype.setEmoticons = function(emoticons) {
     for (var index = 0; index < emoticons.length; index++) {
-        var rawEmoticon = emoticons[index];
+        var rawEmoticon = emoticons[index],
+            emoticon = this.buildEmoticon(rawEmoticon),
+            set = rawEmoticon.emoticon_set;
 
-        for (var indexj = 0; indexj < rawEmoticon.images.length; indexj++) {
-            var emoticon = this.buildEmoticon(rawEmoticon, rawEmoticon.images[indexj]),
-                set = rawEmoticon.images[indexj].emoticon_set;
-
-            if (set == null) this.addToGeneralEmoticons(emoticon);
-            else this.addToEmoticonSet(set, emoticon);
-        };
+        if (set == null) this.addToGeneralEmoticons(emoticon);
+        else this.addToEmoticonSet(set, emoticon);
     };
 }
 
@@ -211,7 +204,8 @@ EmoticonHandler.prototype.initializeEmoticons = function() {
         delete badges['_links'];
         self.setBadges(badges);
     });
-};var ChatHandler = function(chatBox, chatInput) {
+}
+;var ChatHandler = function(chatBox, chatInput) {
     this.messageCount = 1;
     this.chatBox = chatBox;
     this.chatInput = chatInput;

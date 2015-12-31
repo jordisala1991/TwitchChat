@@ -12,7 +12,7 @@ configurations = require('./server_modules/configurations');
 request = require('request');
 fs = require('fs');
 
-request('https://api.twitch.tv/kraken/chat/emoticons').pipe(fs.createWriteStream('public/emoticons.json'));
+request('https://api.twitch.tv/kraken/chat/emoticon_images').pipe(fs.createWriteStream('public/emoticons.json'));
 
 var client = api.createClient(configurations.botName, configurations.connectionOptions),
     socket_handler = require('./server_modules/socket_handler').create(),
@@ -20,6 +20,9 @@ var client = api.createClient(configurations.botName, configurations.connectionO
 
 irc_handler = require('./server_modules/irc_handler').create();
 
+// api.hookEvent(configurations.botName, '*', function(message) {
+//     console.log(message);
+// });
 
 api.hookEvent(configurations.botName, 'registered', function(message) {
     client.irc.raw('TWITCHCLIENT 1');

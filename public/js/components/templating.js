@@ -45,13 +45,13 @@ Templating.prototype.actionTemplating = function(data) {
 Templating.prototype.emoticonTemplating = function(data) {
     var emoticonTemplate =
         '<span class="emoticon" style="' +
-            'background-image: url({BACKGROUND_IMAGE}); ' +
+            'background-image: url(//static-cdn.jtvnw.net/emoticons/v1/{ID}/1.0); ' +
             'height: {HEIGHT}px; ' +
             'width: {WIDTH}px; ' +
             'margin: {MARGIN_TOP}px 0px;">' +
         '</span>';
 
-    emoticonTemplate = emoticonTemplate.replace("{BACKGROUND_IMAGE}", data.emoticonUrl);
+    emoticonTemplate = emoticonTemplate.replace("{ID}", data.emoticonId);
     emoticonTemplate = emoticonTemplate.replace("{HEIGHT}", data.emoticonHeight);
     emoticonTemplate = emoticonTemplate.replace("{WIDTH}", data.emoticonWidth);
     emoticonTemplate = emoticonTemplate.replace("{MARGIN_TOP}", data.emoticonMargins);

@@ -11,7 +11,7 @@ var configurations = {
         server: 'irc.twitch.tv',
         port: 6667,
         secure: false,
-        password: 'oauth:nx1fxw6x1pmaer98e8x21pygxm4dnao'
+        password: 'oauth:7epca7k56hdlint8u8a5yjkebv1lpx'
     },
     environment: require('./conf')()
 };
