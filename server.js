@@ -25,7 +25,9 @@ irc_handler = require('./server_modules/irc_handler').create();
 // });
 
 api.hookEvent(configurations.botName, 'registered', function(message) {
-    client.irc.raw('TWITCHCLIENT 1');
+    client.irc.raw('CAP REQ :twitch.tv/membership');
+    client.irc.raw('CAP REQ :twitch.tv/commands');
+    client.irc.raw('CAP REQ :twitch.tv/tags');
     client.irc.join(configurations.channelName);
 });
 api.hookEvent(configurations.botName, 'names', function(message) {
