@@ -11,6 +11,10 @@ String.prototype.linkify = function() {
     return replacedText;
 }
 
+String.prototype.replaceBetween = function(start, end, what) {
+    return this.substring(0, start) + what + this.substring(end + 1);
+};
+
 String.prototype.capitalize = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }
@@ -66,21 +70,16 @@ Templating.prototype.actionTemplating = function(data) {
     return messageTemplate;
 }
 
-Templating.prototype.emoticonTemplating = function(data) {
-    var emoticonTemplate =
+Templating.prototype.emoticonTemplating = function(emoticon_id) {
+    var emoticon_template =
         '<span class="emoticon" style="' +
             'background-image: url(//static-cdn.jtvnw.net/emoticons/v1/{ID}/1.0); ' +
-            'height: {HEIGHT}px; ' +
-            'width: {WIDTH}px; ' +
-            'margin: {MARGIN_TOP}px 0px;">' +
+            'height: 24px; ' +
+            'width: 24px; ' +
+            'margin: -5px 0px;">' +
         '</span>';
 
-    emoticonTemplate = emoticonTemplate.replace("{ID}", data.emoticonId);
-    emoticonTemplate = emoticonTemplate.replace("{HEIGHT}", data.emoticonHeight);
-    emoticonTemplate = emoticonTemplate.replace("{WIDTH}", data.emoticonWidth);
-    emoticonTemplate = emoticonTemplate.replace("{MARGIN_TOP}", data.emoticonMargins);
-
-    return emoticonTemplate;
+    return emoticon_template.replace("{ID}", emoticon_id);
 }
 
 Templating.prototype.subscriberTemplating = function(imageUrl) {
@@ -103,79 +102,57 @@ Templating.prototype.badgeTemplating = function(badge) {
     return badgeTemplate;
 }
 ;var EmoticonHandler = function() {
-    this.emoticons = [];
     this.badges = [];
     this.templating = new Templating();
     this.initializeEmoticons();
 }
 
-EmoticonHandler.prototype.replaceEmoticonSet = function(set, textMessage) {
-    var emoticonsSet = this.emoticons[set];
+EmoticonHandler.prototype.prepareReplaces = function(emote, replaces) {
+    var splitted = emote.split(':'),
+        id = parseInt(splitted[0]),
+        positions = splitted[1].split(',');
 
-    if (emoticonsSet !== undefined) {
-        for (var index = 0; index < emoticonsSet.length; index++) {
-            var emoticon = emoticonsSet[index],
-                regExp = new RegExp(emoticon.regex, 'g');
+    for (var index = 0; index < positions.length; index++) {
+        var positions_splitted = positions[index].split('-'),
+            start = parseInt(positions_splitted[0]),
+            end = parseInt(positions_splitted[1]);
 
-            if (emoticon.html !== undefined) textMessage = textMessage.replace(regExp, emoticon.html);
-        };
+        replaces.push([start, end, id]);
     }
-    return textMessage;
+    return replaces;
 }
 
-EmoticonHandler.prototype.replaceEmoticons = function(textMessage, user) {
-    var sets = user.emoteSets;
+EmoticonHandler.prototype.replaceEmoticons = function(message) {
+    if (!message.emotes) return message.message;
 
-    for (var index = 0; index < sets.length; index++) {
-        textMessage = this.replaceEmoticonSet(sets[index], textMessage);
-    };
+    var emotes = message.emotes.split('/'),
+        textMessage = message.message,
+        replaces = [];
+
+    for (var index = 0; index < emotes.length; index++) {
+        replaces = this.prepareReplaces(emotes[index], replaces);
+    }
+
+    replaces.sort(function(a, b) { return b[0] - a[0]; });
+
+    for (var index = 0; index < replaces.length; index++) {
+        var replace = replaces[index],
+            template = this.templating.emoticonTemplating(replace[2]);
+
+        textMessage = textMessage.replaceBetween(replace[0], replace[1], template);
+    }
     return textMessage;
 }
 
 EmoticonHandler.prototype.getUserBadges = function(user) {
     var icons = '';
 
-    for (var index = 0; index < user.userModes.length; index++) {
-        var mode = user.userModes[index];
+    for (var index = 0; index < user.modes.length; index++) {
+        var mode = user.modes[index];
 
-        if (this.badges[mode] !== undefined) icons += this.badges[mode];
+        if (mode in this.badges) icons += this.badges[mode];
     };
     return icons;
-}
-
-EmoticonHandler.prototype.addToEmoticonSet = function(set, emoticon) {
-    if (this.emoticons[set] == undefined) this.emoticons[set] = [];
-    this.emoticons[set].push(emoticon);
-}
-
-EmoticonHandler.prototype.addToGeneralEmoticons = function(emoticon) {
-    if (this.emoticons['general'] == undefined) this.emoticons['general'] = [];
-    this.emoticons['general'].push(emoticon);
-}
-
-EmoticonHandler.prototype.buildEmoticon = function(rawEmoticon) {
-    var emoticonHtml = this.templating.emoticonTemplating({
-        emoticonId: rawEmoticon.id,
-        emoticonHeight: 24,
-        emoticonWidth: 24,
-        emoticonMargins: -5
-    });
-
-    return {
-        regex: rawEmoticon.code,
-        html: emoticonHtml
-    };
-}
-
-EmoticonHandler.prototype.setEmoticons = function(emoticons) {
-    for (var index = 0; index < emoticons.length; index++) {
-        var rawEmoticon = emoticons[index],
-            emoticon = this.buildEmoticon(rawEmoticon),
-            set = rawEmoticon.emoticon_set;
-
-        if (set == null) this.addToGeneralEmoticons(emoticon);
-        else this.addToEmoticonSet(set, emoticon);
-    };
 }
 
 EmoticonHandler.prototype.setBadges = function(badges) {
@@ -189,13 +166,6 @@ EmoticonHandler.prototype.setBadges = function(badges) {
 
 EmoticonHandler.prototype.initializeEmoticons = function() {
     var self = this;
-
-    $.ajax({
-        url: '/emoticons.json',
-        dataType: 'json'
-    }).done(function(emoticons) {
-        self.setEmoticons(emoticons.emoticons);
-    });
 
     $.ajax({
         url: 'https://api.twitch.tv/kraken/chat/' + channelName.substring(1) + '/badges',
@@ -270,22 +240,21 @@ ChatHandler.prototype.trackEvent = function(category, action, label) {
 TwitchChat.prototype.getMessageColor = function(user, textMessage) {
     var color = 'black';
     if (/bob/i.test(textMessage)) color = 'green';
-    if (user.userName == 'gmanbot') color = 'blue';
-    else if (user.userName == 'twitchnotify') color = 'red';
+    if (user.user_name == 'gmanbot') color = 'blue';
+    else if (user.user_name == 'twitchnotify') color = 'red';
     return color;
 }
 
-TwitchChat.prototype.getChatLine = function(textMessage, user, messageType) {
-    var message = textMessage.linkify(),
-        processedMessage = this.emoticonHandler.replaceEmoticons(message, user),
-        userBadges = this.emoticonHandler.getUserBadges(user),
+TwitchChat.prototype.getChatLine = function(message, messageType) {
+    var processed_message = this.emoticonHandler.replaceEmoticons(message),
+        userBadges = this.emoticonHandler.getUserBadges(message.user),
         templateData = {
-            userName: user.userName.capitalize(),
-            sender: user.userName,
-            userColor: user.userColor,
-            messageColor: this.getMessageColor(user, processedMessage),
+            userName: message.user.display_name,
+            sender: message.user.user_name,
+            userColor: message.user.color,
+            messageColor: this.getMessageColor(message.user, processed_message),
             messageDate: moment().format('HH:mm'),
-            textMessage: processedMessage,
+            textMessage: processed_message,
             userBadges: userBadges
         };
 
@@ -294,7 +263,7 @@ TwitchChat.prototype.getChatLine = function(textMessage, user, messageType) {
 }
 
 TwitchChat.prototype.addMessage = function(message, messageType) {
-    var chatLine = this.getChatLine(message.message, message.user, messageType);
+    var chatLine = this.getChatLine(message, messageType);
 
     this.chatHandler.addChatLine(chatLine);
 }
@@ -364,11 +333,11 @@ $(document).ready(function() {
     twitchChat.socket.on('message', function(message) {
         twitchChat.addMessage(message, 'message');
     });
-    
+
     twitchChat.socket.on('action', function(message) {
         twitchChat.addMessage(message, 'action');
     });
-    
+
     twitchChat.socket.on('clear_chat', function(userName) {
         twitchChat.deleteMessages(userName);
     });

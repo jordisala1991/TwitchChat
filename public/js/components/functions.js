@@ -11,6 +11,10 @@ String.prototype.linkify = function() {
     return replacedText;
 }
 
+String.prototype.replaceBetween = function(start, end, what) {
+    return this.substring(0, start) + what + this.substring(end + 1);
+};
+
 String.prototype.capitalize = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }

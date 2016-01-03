@@ -9,22 +9,21 @@ var TwitchChat = function() {
 TwitchChat.prototype.getMessageColor = function(user, textMessage) {
     var color = 'black';
     if (/bob/i.test(textMessage)) color = 'green';
-    if (user.userName == 'gmanbot') color = 'blue';
-    else if (user.userName == 'twitchnotify') color = 'red';
+    if (user.user_name == 'gmanbot') color = 'blue';
+    else if (user.user_name == 'twitchnotify') color = 'red';
     return color;
 }
 
-TwitchChat.prototype.getChatLine = function(textMessage, user, messageType) {
-    var message = textMessage.linkify(),
-        processedMessage = this.emoticonHandler.replaceEmoticons(message, user),
-        userBadges = this.emoticonHandler.getUserBadges(user),
+TwitchChat.prototype.getChatLine = function(message, messageType) {
+    var processed_message = this.emoticonHandler.replaceEmoticons(message),
+        userBadges = this.emoticonHandler.getUserBadges(message.user),
         templateData = {
-            userName: user.userName.capitalize(),
-            sender: user.userName,
-            userColor: user.userColor,
-            messageColor: this.getMessageColor(user, processedMessage),
+            userName: message.user.display_name,
+            sender: message.user.user_name,
+            userColor: message.user.color,
+            messageColor: this.getMessageColor(message.user, processed_message),
             messageDate: moment().format('HH:mm'),
-            textMessage: processedMessage,
+            textMessage: processed_message,
             userBadges: userBadges
         };
 
@@ -33,7 +32,7 @@ TwitchChat.prototype.getChatLine = function(textMessage, user, messageType) {
 }
 
 TwitchChat.prototype.addMessage = function(message, messageType) {
-    var chatLine = this.getChatLine(message.message, message.user, messageType);
+    var chatLine = this.getChatLine(message, messageType);
 
     this.chatHandler.addChatLine(chatLine);
 }

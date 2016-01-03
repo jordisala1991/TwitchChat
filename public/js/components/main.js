@@ -42,11 +42,11 @@ $(document).ready(function() {
     twitchChat.socket.on('message', function(message) {
         twitchChat.addMessage(message, 'message');
     });
-    
+
     twitchChat.socket.on('action', function(message) {
         twitchChat.addMessage(message, 'action');
     });
-    
+
     twitchChat.socket.on('clear_chat', function(userName) {
         twitchChat.deleteMessages(userName);
     });

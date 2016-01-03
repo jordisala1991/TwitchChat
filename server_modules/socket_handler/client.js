@@ -22,9 +22,9 @@ Client.prototype.createIrcConnection = function() {
         connection.irc.join(configurations.channelName);
     });
     api.hookEvent(this.userName, 'join', function(message) {
-        if (message.username == self.userName) {
-            irc_handler.channelMessage('twitchnotify', 'Connected to the channel, now you can send messages', self.userName);
-        }
+        // if (message.username == self.userName) {
+        //     irc_handler.channelMessage('twitchnotify', 'Connected to the channel, now you can send messages', self.userName);
+        // }
     });
     api.hookEvent(this.userName, 'privmsg', function(message) {
         if (message.target !== configurations.channelName) {
