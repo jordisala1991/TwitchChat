@@ -30,44 +30,34 @@ Array.prototype.contains = function(object) {
 
 }
 
-Templating.prototype.messageTemplating = function(data) {
-    var messageTemplate =
-        '<div class="chat-line {MESSAGE_COLOR}" data-sender="{SENDER}">' +
-            '<span class="time">{DATE}</span>' +
-            '{USER_BADGES_ICONS}' +
-            '<span class="user-name" style="color: {USER_COLOR}">{USER_NAME}:</span>' +
-            '<span class="message">{MESSAGE}</span>' +
-        '</div>';
+Templating.prototype.userTemplating = function(message) {
+    var template =
+        '<span class="time">{DATE}</span>' +
+        '{USER_BADGES_ICONS}' +
+        '<span class="user-name" data-sender="{SENDER}" style="color: {USER_COLOR}">{USER_NAME}:</span>';
 
-    messageTemplate = messageTemplate.replace("{MESSAGE_COLOR}", data.messageColor);
-    messageTemplate = messageTemplate.replace("{DATE}", data.messageDate);
-    messageTemplate = messageTemplate.replace("{USER_COLOR}", data.userColor);
-    messageTemplate = messageTemplate.replace("{USER_NAME}", data.userName);
-    messageTemplate = messageTemplate.replace("{SENDER}", data.sender);
-    messageTemplate = messageTemplate.replace("{MESSAGE}", data.textMessage);
-    messageTemplate = messageTemplate.replace("{USER_BADGES_ICONS}", data.userBadges);
+    if (message.user === undefined) return '';
 
-    return messageTemplate;
+    template = template.replace("{USER_COLOR}", message.user.color);
+    template = template.replace("{USER_NAME}", message.user.display_name);
+    template = template.replace("{DATE}", message.user.date);
+    template = template.replace("{USER_BADGES_ICONS}", message.user.badges);
+    template = template.replace("{SENDER}", message.user.user_name);
+
+    return template;
 }
 
-Templating.prototype.actionTemplating = function(data) {
-    var messageTemplate =
-        '<div class="chat-line {MESSAGE_COLOR}" data-sender="{SENDER}">' +
-            '<span class="time">{DATE}</span>' +
-            '{USER_BADGES_ICONS}' +
-            '<span class="user-name" style="color: {USER_COLOR}">&bull; {USER_NAME}</span>' +
-            '<span class="message">{MESSAGE}</span>' +
+Templating.prototype.messageTemplating = function(message) {
+    var template =
+        '<div class="chat-line">' +
+            this.userTemplating(message) +
+            '<span class="message" style="color: {MESSAGE_COLOR}">{MESSAGE}</span>' +
         '</div>';
 
-    messageTemplate = messageTemplate.replace("{MESSAGE_COLOR}", data.messageColor);
-    messageTemplate = messageTemplate.replace("{DATE}", data.messageDate);
-    messageTemplate = messageTemplate.replace("{USER_COLOR}", data.userColor);
-    messageTemplate = messageTemplate.replace("{USER_NAME}", data.userName);
-    messageTemplate = messageTemplate.replace("{SENDER}", data.sender);
-    messageTemplate = messageTemplate.replace("{MESSAGE}", data.textMessage);
-    messageTemplate = messageTemplate.replace("{USER_BADGES_ICONS}", data.userBadges);
+    template = template.replace("{MESSAGE}", message.processed_message);
+    template = template.replace("{MESSAGE_COLOR}", message.color);
 
-    return messageTemplate;
+    return template;
 }
 
 Templating.prototype.emoticonTemplating = function(emoticon_id) {
@@ -213,11 +203,11 @@ ChatHandler.prototype.removeAllChatLines = function() {
 }
 
 ChatHandler.prototype.removeChatLinesFrom = function(userName) {
-    var messagesToDelete = this.chatBox.find('div[data-sender="' + userName + '"]');
+    var messagesToDelete = this.chatBox.find('span[data-sender="' + userName + '"]');
 
     messagesToDelete.each(function() {
-        $(this).removeClass().addClass('chat-line').addClass('grey');
-        $(this).find('span.message').text('<message deleted>');
+        $(this).parent().removeClass().addClass('chat-line').addClass('grey');
+        $(this).parent().find('span.message').text('<message deleted>');
     });
 }
 
@@ -227,9 +217,10 @@ ChatHandler.prototype.clearChatInput = function() {
 
 ChatHandler.prototype.trackEvent = function(category, action, label) {
     if (typeof ga !== 'undefined') {
-        ga('send', 'event', category, action, label);        
+        ga('send', 'event', category, action, label);
     }
-};var TwitchChat = function() {
+}
+;var TwitchChat = function() {
     this.socket = io.connect(baseUrl);
     this.templating = new Templating();
     this.chatHandler = new ChatHandler($('.chat-lines'), $('.chat-input'));
@@ -237,35 +228,20 @@ ChatHandler.prototype.trackEvent = function(category, action, label) {
     this.userName = '';
 }
 
-TwitchChat.prototype.getMessageColor = function(user, textMessage) {
-    var color = 'black';
-    if (/bob/i.test(textMessage)) color = 'green';
-    if (user.user_name == 'gmanbot') color = 'blue';
-    else if (user.user_name == 'twitchnotify') color = 'red';
-    return color;
+TwitchChat.prototype.getChatLine = function(message) {
+    message.processed_message = this.emoticonHandler.replaceEmoticons(message);
+    if (message.user) {
+        message.user.badges = this.emoticonHandler.getUserBadges(message.user);
+        message.user.date = moment().format('HH:mm');
+    }
+
+    return this.templating.messageTemplating(message);
 }
 
-TwitchChat.prototype.getChatLine = function(message, messageType) {
-    var processed_message = this.emoticonHandler.replaceEmoticons(message),
-        userBadges = this.emoticonHandler.getUserBadges(message.user),
-        templateData = {
-            userName: message.user.display_name,
-            sender: message.user.user_name,
-            userColor: message.user.color,
-            messageColor: this.getMessageColor(message.user, processed_message),
-            messageDate: moment().format('HH:mm'),
-            textMessage: processed_message,
-            userBadges: userBadges
-        };
+TwitchChat.prototype.addMessage = function(message) {
+    var chat_line = this.getChatLine(message);
 
-    if (messageType == 'message') return this.templating.messageTemplating(templateData);
-    else return this.templating.actionTemplating(templateData);
-}
-
-TwitchChat.prototype.addMessage = function(message, messageType) {
-    var chatLine = this.getChatLine(message, messageType);
-
-    this.chatHandler.addChatLine(chatLine);
+    this.chatHandler.addChatLine(chat_line);
 }
 
 TwitchChat.prototype.deleteAllMessages = function() {
@@ -331,11 +307,7 @@ $(document).ready(function() {
     });
 
     twitchChat.socket.on('message', function(message) {
-        twitchChat.addMessage(message, 'message');
-    });
-
-    twitchChat.socket.on('action', function(message) {
-        twitchChat.addMessage(message, 'action');
+        twitchChat.addMessage(message);
     });
 
     twitchChat.socket.on('clear_chat', function(userName) {

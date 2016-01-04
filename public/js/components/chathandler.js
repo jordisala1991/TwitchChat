@@ -36,11 +36,11 @@ ChatHandler.prototype.removeAllChatLines = function() {
 }
 
 ChatHandler.prototype.removeChatLinesFrom = function(userName) {
-    var messagesToDelete = this.chatBox.find('div[data-sender="' + userName + '"]');
+    var messagesToDelete = this.chatBox.find('span[data-sender="' + userName + '"]');
 
     messagesToDelete.each(function() {
-        $(this).removeClass().addClass('chat-line').addClass('grey');
-        $(this).find('span.message').text('<message deleted>');
+        $(this).parent().removeClass().addClass('chat-line').addClass('grey');
+        $(this).parent().find('span.message').text('<message deleted>');
     });
 }
 
@@ -50,6 +50,6 @@ ChatHandler.prototype.clearChatInput = function() {
 
 ChatHandler.prototype.trackEvent = function(category, action, label) {
     if (typeof ga !== 'undefined') {
-        ga('send', 'event', category, action, label);        
+        ga('send', 'event', category, action, label);
     }
 }

@@ -9,16 +9,11 @@ app = express();
 server = http.createServer(app);
 io = require('socket.io').listen(server);
 configurations = require('./server_modules/configurations');
-request = require('request');
-fs = require('fs');
-
-request('https://api.twitch.tv/kraken/chat/emoticon_images').pipe(fs.createWriteStream('public/emoticons.json'));
 
 var client = api.createClient(configurations.botName, configurations.connectionOptions),
     socket_handler = require('./server_modules/socket_handler').create(),
     express_handler = require('./server_modules/express_handler').create();
 
-irc_handler = require('./server_modules/irc_handler').create();
 IrcHandlerV2 = require('./server_modules/irc_handler/v2.js');
 irc_handler_v2 = new IrcHandlerV2();
 
@@ -32,25 +27,6 @@ api.hookEvent(configurations.botName, 'registered', function(message) {
     client.irc.raw('CAP REQ :twitch.tv/tags');
     client.irc.join(configurations.channelName);
 });
-// api.hookEvent(configurations.botName, 'names', function(message) {
-//     irc_handler.handleNamesList(message);
-// });
-// api.hookEvent(configurations.botName, 'join', function(message) {
-//     irc_handler.handleJoin(message);
-// });
-// api.hookEvent(configurations.botName, 'part', function(message) {
-//     irc_handler.handlePart(message);
-// });
-// api.hookEvent(configurations.botName, 'privmsg', function(message) {
-//     irc_handler.handleMessage(message);
-// });
-// api.hookEvent(configurations.botName, 'mode_change', function(message) {
-//     irc_handler.userModeChanged(message);
-// });
-// api.hookEvent(configurations.botName, 'action', function(message) {
-//     irc_handler.handleAction(message);
-// });
-
 
 io.sockets.on('connection', function(socket) {
     socket_handler.connection(socket);

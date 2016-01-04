@@ -6,35 +6,20 @@ var TwitchChat = function() {
     this.userName = '';
 }
 
-TwitchChat.prototype.getMessageColor = function(user, textMessage) {
-    var color = 'black';
-    if (/bob/i.test(textMessage)) color = 'green';
-    if (user.user_name == 'gmanbot') color = 'blue';
-    else if (user.user_name == 'twitchnotify') color = 'red';
-    return color;
+TwitchChat.prototype.getChatLine = function(message) {
+    message.processed_message = this.emoticonHandler.replaceEmoticons(message);
+    if (message.user) {
+        message.user.badges = this.emoticonHandler.getUserBadges(message.user);
+        message.user.date = moment().format('HH:mm');
+    }
+
+    return this.templating.messageTemplating(message);
 }
 
-TwitchChat.prototype.getChatLine = function(message, messageType) {
-    var processed_message = this.emoticonHandler.replaceEmoticons(message),
-        userBadges = this.emoticonHandler.getUserBadges(message.user),
-        templateData = {
-            userName: message.user.display_name,
-            sender: message.user.user_name,
-            userColor: message.user.color,
-            messageColor: this.getMessageColor(message.user, processed_message),
-            messageDate: moment().format('HH:mm'),
-            textMessage: processed_message,
-            userBadges: userBadges
-        };
+TwitchChat.prototype.addMessage = function(message) {
+    var chat_line = this.getChatLine(message);
 
-    if (messageType == 'message') return this.templating.messageTemplating(templateData);
-    else return this.templating.actionTemplating(templateData);
-}
-
-TwitchChat.prototype.addMessage = function(message, messageType) {
-    var chatLine = this.getChatLine(message, messageType);
-
-    this.chatHandler.addChatLine(chatLine);
+    this.chatHandler.addChatLine(chat_line);
 }
 
 TwitchChat.prototype.deleteAllMessages = function() {

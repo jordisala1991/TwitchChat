@@ -1,6 +1,8 @@
 function IrcHandlerV2() {
     this.handlers = {
-        'PRIVMSG': require('./privmsg.js')
+        'PRIVMSG': require('./privmsg.js'),
+        'NOTICE': require('./notice.js'),
+        'CLEARCHAT': require('./clearchat.js')
     }
 }
 

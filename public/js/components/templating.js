@@ -2,44 +2,34 @@ var Templating = function() {
 
 }
 
-Templating.prototype.messageTemplating = function(data) {
-    var messageTemplate =
-        '<div class="chat-line {MESSAGE_COLOR}" data-sender="{SENDER}">' +
-            '<span class="time">{DATE}</span>' +
-            '{USER_BADGES_ICONS}' +
-            '<span class="user-name" style="color: {USER_COLOR}">{USER_NAME}:</span>' +
-            '<span class="message">{MESSAGE}</span>' +
-        '</div>';
+Templating.prototype.userTemplating = function(message) {
+    var template =
+        '<span class="time">{DATE}</span>' +
+        '{USER_BADGES_ICONS}' +
+        '<span class="user-name" data-sender="{SENDER}" style="color: {USER_COLOR}">{USER_NAME}:</span>';
 
-    messageTemplate = messageTemplate.replace("{MESSAGE_COLOR}", data.messageColor);
-    messageTemplate = messageTemplate.replace("{DATE}", data.messageDate);
-    messageTemplate = messageTemplate.replace("{USER_COLOR}", data.userColor);
-    messageTemplate = messageTemplate.replace("{USER_NAME}", data.userName);
-    messageTemplate = messageTemplate.replace("{SENDER}", data.sender);
-    messageTemplate = messageTemplate.replace("{MESSAGE}", data.textMessage);
-    messageTemplate = messageTemplate.replace("{USER_BADGES_ICONS}", data.userBadges);
+    if (message.user === undefined) return '';
 
-    return messageTemplate;
+    template = template.replace("{USER_COLOR}", message.user.color);
+    template = template.replace("{USER_NAME}", message.user.display_name);
+    template = template.replace("{DATE}", message.user.date);
+    template = template.replace("{USER_BADGES_ICONS}", message.user.badges);
+    template = template.replace("{SENDER}", message.user.user_name);
+
+    return template;
 }
 
-Templating.prototype.actionTemplating = function(data) {
-    var messageTemplate =
-        '<div class="chat-line {MESSAGE_COLOR}" data-sender="{SENDER}">' +
-            '<span class="time">{DATE}</span>' +
-            '{USER_BADGES_ICONS}' +
-            '<span class="user-name" style="color: {USER_COLOR}">&bull; {USER_NAME}</span>' +
-            '<span class="message">{MESSAGE}</span>' +
+Templating.prototype.messageTemplating = function(message) {
+    var template =
+        '<div class="chat-line">' +
+            this.userTemplating(message) +
+            '<span class="message" style="color: {MESSAGE_COLOR}">{MESSAGE}</span>' +
         '</div>';
 
-    messageTemplate = messageTemplate.replace("{MESSAGE_COLOR}", data.messageColor);
-    messageTemplate = messageTemplate.replace("{DATE}", data.messageDate);
-    messageTemplate = messageTemplate.replace("{USER_COLOR}", data.userColor);
-    messageTemplate = messageTemplate.replace("{USER_NAME}", data.userName);
-    messageTemplate = messageTemplate.replace("{SENDER}", data.sender);
-    messageTemplate = messageTemplate.replace("{MESSAGE}", data.textMessage);
-    messageTemplate = messageTemplate.replace("{USER_BADGES_ICONS}", data.userBadges);
+    template = template.replace("{MESSAGE}", message.processed_message);
+    template = template.replace("{MESSAGE_COLOR}", message.color);
 
-    return messageTemplate;
+    return template;
 }
 
 Templating.prototype.emoticonTemplating = function(emoticon_id) {
