@@ -14,11 +14,11 @@ var client = api.createClient(configurations.botName, configurations.connectionO
     socket_handler = require('./server_modules/socket_handler').create(),
     express_handler = require('./server_modules/express_handler').create();
 
-IrcHandlerV2 = require('./server_modules/irc_handler/v2.js');
-irc_handler_v2 = new IrcHandlerV2();
+IrcHandler = require('./server_modules/irc_handler');
+irc_handler = new IrcHandler();
 
 api.hookEvent(configurations.botName, '*', function(message) {
-    irc_handler_v2.handle(message);
+    irc_handler.handle(message);
 });
 
 api.hookEvent(configurations.botName, 'registered', function(message) {
