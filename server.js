@@ -8,35 +8,26 @@ http = require('http');
 app = express();
 server = http.createServer(app);
 io = require('socket.io').listen(server);
+
 configurations = require('./server_modules/configurations');
 
-var client = api.createClient(configurations.botName, configurations.connectionOptions),
-    socket_handler = require('./server_modules/socket_handler').create(),
-    express_handler = require('./server_modules/express_handler').create();
-
+Client = require('./server_modules/socket_handler/client.js');
 IrcHandler = require('./server_modules/irc_handler');
+SocketHandler = require('./server_modules/socket_handler');
+ExpressHandler = require('./server_modules/express_handler');
+
 irc_handler = new IrcHandler();
-
-api.hookEvent(configurations.botName, '*', function(message) {
-    irc_handler.handle(message);
-});
-
-api.hookEvent(configurations.botName, 'registered', function(message) {
-    client.irc.raw('CAP REQ :twitch.tv/membership');
-    client.irc.raw('CAP REQ :twitch.tv/commands');
-    client.irc.raw('CAP REQ :twitch.tv/tags');
-    client.irc.join(configurations.channelName);
-});
+client = new Client(configurations.botName, configurations.connectionOptions.password, configurations.channelName);
+socket_handler = new SocketHandler();
+express_handler = new ExpressHandler();
 
 io.sockets.on('connection', function(socket) {
     socket_handler.connection(socket);
 });
 
-
 express_handler.configure();
 app.get('/', function(request, response) {
     express_handler.homeAction(request, response);
 });
-
 
 server.listen(process.env.PORT || 5000);

@@ -1,4 +1,4 @@
-var ExpressHandler = function() {
+function ExpressHandler() {
     this.oneDay = 86400000;
 }
 
@@ -24,6 +24,4 @@ ExpressHandler.prototype.homeAction = function(request, response) {
     });
 }
 
-module.exports.create = function() {
-    return new ExpressHandler();
-}
+module.exports = ExpressHandler;

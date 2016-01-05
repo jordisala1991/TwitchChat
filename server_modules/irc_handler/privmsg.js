@@ -1,11 +1,11 @@
-module.exports = function(message) {
+module.exports = function(message, client) {
     var options = getOptions(message);
 
-    io.sockets.json.emit('message', {
+    io.sockets.in(client).json.emit('message', {
         'message': encode(message.message),
         'emotes': options['emotes'],
         'color': isAction(message) ? options['color'] : undefined,
-        'channel': message.target,
+        'time': message.time,
         'user': {
             'display_name': options['display-name'] || capitalize(message.username),
             'user_name': message.username,

@@ -1,5 +1,5 @@
-module.exports = function(message) {
-    io.sockets.json.emit('message', {
+module.exports = function(message, client) {
+    io.sockets.in(client).json.emit('message', {
         'message': message.message
     });
 }

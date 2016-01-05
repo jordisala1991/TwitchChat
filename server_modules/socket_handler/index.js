@@ -1,39 +1,35 @@
-var SocketHandler = function() {
-    this.clientFactory = require('./client.js');
+function SocketHandler() {
     this.clients = []
 }
 
 SocketHandler.prototype.connection = function(socket) {
-    var userName,
+    var user_name,
         self = this;
 
-    socket.on('login', function(data) {
-        userName = data.username;
-        socket.join(userName);
+    socket.join(configurations.botName);
 
-        if (self.clients[userName] === undefined) {
-            var client = self.clientFactory.create(userName, data.oauth);
-            self.clients[userName] = client;
+    socket.on('login', function(data) {
+        user_name = data.username;
+        if (self.clients[user_name] === undefined) {
+            self.clients[user_name] = new Client(user_name, data.oauth, user_name);
         }
-        else self.clients[userName].connect();
+        else self.clients[user_name].connect();
     });
 
     socket.on('message_to_send', function(message) {
-        if (self.clients[userName] !== undefined) {
-            self.clients[userName].sendChannelMessage(message);
+        if (user_name in self.clients) {
+            self.clients[user_name].sendChannelMessage(message);
         }
     });
 
     socket.on('disconnect', function() {
-        if (self.clients[userName] !== undefined) {
-            self.clients[userName].disconnect();
-            if (self.clients[userName].numberOfConnections == 0) {
-                delete self.clients[userName];
+        if (user_name in self.clients) {
+            self.clients[user_name].disconnect();
+            if (self.clients[user_name].connections == 0) {
+                delete self.clients[user_name];
             }
         }
     });
 }
 
-module.exports.create = function() {
-    return new SocketHandler();
-}
+module.exports = SocketHandler;

@@ -1,35 +1,34 @@
-var Client = function(userName, oauth) {
-    this.userName = userName;
+function Client(user_name, oauth, target) {
+    this.user_name = user_name;
     this.oauth = oauth;
-    this.numberOfConnections = 1;
+    this.target = target;
+    this.connections = 1;
     this.connection = this.createIrcConnection();
 }
 
 Client.prototype.createIrcConnection = function() {
     var self = this,
         options = {
-            nick: this.userName,
-            user: this.userName,
-            realname: this.userName,
+            nick: this.user_name,
+            user: this.user_name,
+            realname: this.user_name,
             server: configurations.connectionOptions.server,
             port: configurations.connectionOptions.port,
             secure: configurations.connectionOptions.secure,
             password: this.oauth
         };
 
-    var connection = api.createClient(this.userName, options);
-    api.hookEvent(this.userName, 'registered', function(message) {
+    var connection = api.createClient(this.user_name, options);
+
+    api.hookEvent(this.user_name, 'registered', function(message) {
+        connection.irc.raw('CAP REQ :twitch.tv/membership');
+        connection.irc.raw('CAP REQ :twitch.tv/commands');
+        connection.irc.raw('CAP REQ :twitch.tv/tags');
         connection.irc.join(configurations.channelName);
     });
-    api.hookEvent(this.userName, 'join', function(message) {
-        // if (message.username == self.userName) {
-        //     irc_handler.channelMessage('twitchnotify', 'Connected to the channel, now you can send messages', self.userName);
-        // }
-    });
-    api.hookEvent(this.userName, 'privmsg', function(message) {
-        if (message.target !== configurations.channelName) {
-            irc_handler.handleMessage(message, self.userName);
-        }
+
+    api.hookEvent(this.user_name, '*', function(message) {
+        irc_handler.handle(message, self.user_name);
     });
 
     return connection;
@@ -41,20 +40,16 @@ Client.prototype.sendChannelMessage = function(message) {
 }
 
 Client.prototype.connect = function() {
-    ++this.numberOfConnections;
+    ++this.connections;
     if (this.connection.irc.isConnected() === false) this.connection.irc.reconnect();
 }
 
 Client.prototype.disconnect = function() {
-    --this.numberOfConnections;
-    if (this.numberOfConnections == 0) {
-        api.unhookEvent(this.userName, 'privmsg');
-        api.unhookEvent(this.userName, 'join');
-        api.unhookEvent(this.userName, 'registered');
-        api.destroyClient(this.userName);
+    --this.connections;
+    if (this.connections == 0) {
+        api.unhookEvent(this.user_name, '*');
+        api.destroyClient(this.user_name);
     }
 }
 
-module.exports.create = function(userName, oauth) {
-    return new Client(userName, oauth);
-}
+module.exports = Client;

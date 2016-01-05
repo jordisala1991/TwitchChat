@@ -8,22 +8,22 @@ function IrcHandler() {
 
 IrcHandler.prototype.getCommand = function(message) {
     if (typeof message.raw === 'string' || message.raw instanceof String) {
-        var messageSplitted = message.raw.split(' '),
-            command = messageSplitted[1];
+        var message_splitted = message.raw.split(' '),
+            command = message_splitted[1];
 
-        if (messageSplitted[0].indexOf('@') === 0) {
-            command = messageSplitted[2];
-        } else if (messageSplitted.length === 2) {
-            command = messageSplitted[0];
+        if (message_splitted[0].indexOf('@') === 0) {
+            command = message_splitted[2];
+        } else if (message_splitted.length === 2) {
+            command = message_splitted[0];
         }
         return command;
     }
 }
 
-IrcHandler.prototype.handle = function(message) {
+IrcHandler.prototype.handle = function(message, client) {
     var command = this.getCommand(message);
 
-    if (command in this.handlers) return this.handlers[command](message);
+    if (command in this.handlers) return this.handlers[command](message, client);
 }
 
 module.exports = IrcHandler;
