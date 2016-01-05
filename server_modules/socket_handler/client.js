@@ -1,7 +1,6 @@
-function Client(user_name, oauth, target) {
+function Client(user_name, oauth) {
     this.user_name = user_name;
     this.oauth = oauth;
-    this.target = target;
     this.connections = 1;
     this.connection = this.createIrcConnection();
 }

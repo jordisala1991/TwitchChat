@@ -17,7 +17,7 @@ SocketHandler = require('./server_modules/socket_handler');
 ExpressHandler = require('./server_modules/express_handler');
 
 irc_handler = new IrcHandler();
-client = new Client(configurations.botName, configurations.connectionOptions.password, configurations.channelName);
+client = new Client(configurations.botName, configurations.connectionOptions.password);
 socket_handler = new SocketHandler();
 express_handler = new ExpressHandler();
 
