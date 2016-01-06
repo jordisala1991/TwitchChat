@@ -8,9 +8,9 @@ var TwitchChat = function() {
 
 TwitchChat.prototype.getChatLine = function(message) {
     message.processed_message = this.emoticonHandler.replaceEmoticons(message);
+    message.time = moment(message.time).format('HH:mm');
     if (message.user) {
         message.user.badges = this.emoticonHandler.getUserBadges(message.user);
-        message.user.date = moment().format('HH:mm');
     }
 
     return this.templating.messageTemplating(message);

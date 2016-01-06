@@ -11,7 +11,7 @@ SocketHandler.prototype.connection = function(socket) {
     socket.on('login', function(data) {
         user_name = data.username;
         if (self.clients[user_name] === undefined) {
-            self.clients[user_name] = new Client(user_name, data.oauth);
+            self.clients[user_name] = new Client(user_name, data.oauth, user_name);
         }
         else self.clients[user_name].connect();
     });

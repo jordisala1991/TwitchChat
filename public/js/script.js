@@ -40,7 +40,7 @@ Templating.prototype.userTemplating = function(message) {
 
     template = template.replace("{USER_COLOR}", message.user.color);
     template = template.replace("{USER_NAME}", message.user.display_name);
-    template = template.replace("{DATE}", message.user.date);
+    template = template.replace("{DATE}", message.time);
     template = template.replace("{USER_BADGES_ICONS}", message.user.badges);
     template = template.replace("{SENDER}", message.user.user_name);
 
@@ -230,9 +230,9 @@ ChatHandler.prototype.trackEvent = function(category, action, label) {
 
 TwitchChat.prototype.getChatLine = function(message) {
     message.processed_message = this.emoticonHandler.replaceEmoticons(message);
+    message.time = moment(message.time).format('HH:mm');
     if (message.user) {
         message.user.badges = this.emoticonHandler.getUserBadges(message.user);
-        message.user.date = moment().format('HH:mm');
     }
 
     return this.templating.messageTemplating(message);
