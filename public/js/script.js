@@ -14,18 +14,6 @@ String.prototype.linkify = function() {
 String.prototype.replaceBetween = function(start, end, what) {
     return this.substring(0, start) + what + this.substring(end + 1);
 };
-
-String.prototype.capitalize = function() {
-    return this.charAt(0).toUpperCase() + this.slice(1);
-}
-
-Array.prototype.contains = function(object) {
-    var index = this.length;
-    while (index--) {
-        if (this[index] === object) return true;
-    }
-    return false;
-}
 ;var Templating = function() {
 
 }
@@ -116,7 +104,7 @@ EmoticonHandler.prototype.replaceEmoticons = function(message) {
     if (!message.emotes) return message.message;
 
     var emotes = message.emotes.split('/'),
-        textMessage = message.message,
+        text = message.message,
         replaces = [];
 
     for (var index = 0; index < emotes.length; index++) {
@@ -129,9 +117,9 @@ EmoticonHandler.prototype.replaceEmoticons = function(message) {
         var replace = replaces[index],
             template = this.templating.emoticonTemplating(replace[2]);
 
-        textMessage = textMessage.replaceBetween(replace[0], replace[1], template);
+        text = text.replaceBetween(replace[0], replace[1], template);
     }
-    return textMessage;
+    return text;
 }
 
 EmoticonHandler.prototype.getUserBadges = function(user) {

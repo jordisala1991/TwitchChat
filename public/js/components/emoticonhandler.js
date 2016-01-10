@@ -23,7 +23,7 @@ EmoticonHandler.prototype.replaceEmoticons = function(message) {
     if (!message.emotes) return message.message;
 
     var emotes = message.emotes.split('/'),
-        textMessage = message.message,
+        text = message.message,
         replaces = [];
 
     for (var index = 0; index < emotes.length; index++) {
@@ -36,9 +36,9 @@ EmoticonHandler.prototype.replaceEmoticons = function(message) {
         var replace = replaces[index],
             template = this.templating.emoticonTemplating(replace[2]);
 
-        textMessage = textMessage.replaceBetween(replace[0], replace[1], template);
+        text = text.replaceBetween(replace[0], replace[1], template);
     }
-    return textMessage;
+    return text;
 }
 
 EmoticonHandler.prototype.getUserBadges = function(user) {
