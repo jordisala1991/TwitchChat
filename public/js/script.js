@@ -229,7 +229,7 @@ ChatHandler.prototype.trackEvent = function(category, action, label) {
 }
 
 TwitchChat.prototype.getChatLine = function(message) {
-    message.processed_message = this.emoticonHandler.replaceEmoticons(message);
+    message.processed_message = this.emoticonHandler.replaceEmoticons(message).linkify();
     message.time = moment(message.time).format('HH:mm');
     if (message.user) {
         message.user.badges = this.emoticonHandler.getUserBadges(message.user);
