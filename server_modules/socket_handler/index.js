@@ -7,13 +7,18 @@ SocketHandler.prototype.connection = function(socket) {
         self = this;
 
     socket.join(configurations.botName);
+    socket.join(configurations.botName + '-notice');
 
     socket.on('login', function(data) {
         user_name = data.username;
-        if (self.clients[user_name] === undefined) {
-            self.clients[user_name] = new Client(user_name, data.oauth, user_name);
+
+        socket.leave(configurations.botName + '-notice');
+        socket.join(user_name + '-notice');
+
+        if (user_name in self.clients) {
+            self.clients[user_name].connect();
         }
-        else self.clients[user_name].connect();
+        else self.clients[user_name] = new Client(user_name, data.oauth);
     });
 
     socket.on('message_to_send', function(message) {

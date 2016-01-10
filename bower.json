@@ -5,10 +5,8 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "jquery": "latest",
-    "selectivizr": "latest",
-    "moment": "latest",
-    "socket.io-client": "latest",
-    "html5shiv": "latest"
+    "jquery": "2.2.0",
+    "moment": "2.11.1",
+    "socket.io-client": "1.4.3"
   }
 }

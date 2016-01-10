@@ -16,10 +16,6 @@ module.exports = function(grunt) {
 
                 dest: 'public/js/script.js'
             },
-            polyfills: {
-                src: 'public/js/polyfills/*.js',
-                dest: 'public/js/polyfills.js'
-            },
             vendor: {
                 src: 'public/js/vendor/*.js',
                 dest: 'public/js/vendor.js'
@@ -43,24 +39,7 @@ module.exports = function(grunt) {
             dist: {
                 files: {
                     'public/js/script.min.js': ['<%= concat.dist.dest %>'],
-                    'public/js/polyfills.min.js': ['<%= concat.polyfills.dest %>'],
                     'public/js/vendor.min.js': ['<%= concat.vendor.dest %>']
-                }
-            }
-        },
-        bower: {
-            dev: {
-                dest: 'public/js/vendor/',
-                options: {
-                    packageSpecific: {
-                        selectivizr: {
-                            dest: 'public/js/polyfills/'
-                        },
-                        html5shiv: {
-                            dest: 'public/js/polyfills/'
-                        }
-                    },
-                    keepExpandedHierarchy: false
                 }
             }
         },
@@ -80,7 +59,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
-    grunt.loadNpmTasks('grunt-bower');
 
-    grunt.registerTask('default', ['bower', 'concat', 'uglify', 'cssmin']);
+    grunt.registerTask('default', ['concat', 'uglify', 'cssmin']);
 };

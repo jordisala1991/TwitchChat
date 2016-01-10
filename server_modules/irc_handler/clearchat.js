@@ -1,9 +1,9 @@
-module.exports = function(message, client) {
+module.exports = function(message, event) {
     if (isTimeout(message)) {
-        io.sockets.in(client).json.emit('clear_chat', message.params[1]);
+        io.sockets.in(event[0]).json.emit('clear_chat', message.params[1]);
     } else {
-        io.sockets.in(client).json.emit('clear_all_chat');
-        io.sockets.in(client).json.emit('message', {
+        io.sockets.in(event[0]).json.emit('clear_all_chat');
+        io.sockets.in(event[0]).json.emit('message', {
             'message': 'Chat was cleared by a moderator'
         });
     }

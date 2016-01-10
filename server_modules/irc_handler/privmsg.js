@@ -1,7 +1,7 @@
-module.exports = function(message, client) {
+module.exports = function(message, event) {
     var options = getOptions(message);
 
-    io.sockets.in(client).json.emit('message', {
+    io.sockets.in(event[0]).json.emit('message', {
         'message': encode(message.message),
         'emotes': options['emotes'],
         'color': isAction(message) ? options['color'] : undefined,

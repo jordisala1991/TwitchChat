@@ -21,7 +21,7 @@ client = new Client(configurations.botName, configurations.connectionOptions.pas
 socket_handler = new SocketHandler();
 express_handler = new ExpressHandler();
 
-io.sockets.on('connection', function(socket) {
+io.on('connection', function(socket) {
     socket_handler.connection(socket);
 });
 

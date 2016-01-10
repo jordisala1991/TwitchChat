@@ -6,16 +6,15 @@ function Client(user_name, oauth) {
 }
 
 Client.prototype.createIrcConnection = function() {
-    var self = this,
-        options = {
-            nick: this.user_name,
-            user: this.user_name,
-            realname: this.user_name,
-            server: configurations.connectionOptions.server,
-            port: configurations.connectionOptions.port,
-            secure: configurations.connectionOptions.secure,
-            password: this.oauth
-        };
+    var options = {
+        nick: this.user_name,
+        user: this.user_name,
+        realname: this.user_name,
+        server: configurations.connectionOptions.server,
+        port: configurations.connectionOptions.port,
+        secure: configurations.connectionOptions.secure,
+        password: this.oauth
+    };
 
     var connection = api.createClient(this.user_name, options);
 
@@ -27,7 +26,7 @@ Client.prototype.createIrcConnection = function() {
     });
 
     api.hookEvent(this.user_name, '*', function(message) {
-        irc_handler.handle(message, self.user_name);
+        irc_handler.handle(message, this.event);
     });
 
     return connection;
