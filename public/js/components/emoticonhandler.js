@@ -1,7 +1,6 @@
 var EmoticonHandler = function() {
-    this.badges = [];
+    this.subscriberBadge = null;
     this.templating = new Templating();
-    this.initializeEmoticons();
 }
 
 EmoticonHandler.prototype.prepareReplaces = function(emote, replaces) {
@@ -47,28 +46,21 @@ EmoticonHandler.prototype.getUserBadges = function(user) {
     for (var index = 0; index < user.modes.length; index++) {
         var mode = user.modes[index];
 
-        if (mode in this.badges) icons += this.badges[mode];
+        if (mode === 'subscriber') icons += this.templating.badgeSubscriber(this.subscriberBadge);
+        else icons += this.templating.badgeTemplating(mode);
     };
     return icons;
 }
 
-EmoticonHandler.prototype.setBadges = function(badges) {
-    var self = this;
-
-    $.each(badges, function(mode, badge) {
-        if (mode == 'subscriber' && badge !== null) self.badges[mode] = self.templating.subscriberTemplating(badge.image);
-        else self.badges[mode] = self.templating.badgeTemplating(mode);
-    });
-}
-
-EmoticonHandler.prototype.initializeEmoticons = function() {
-    var self = this;
+EmoticonHandler.prototype.setSubscriberBadge = function(channelName) {
+    var that = this;
 
     $.ajax({
         url: 'https://api.twitch.tv/kraken/chat/' + channelName.substring(1) + '/badges',
         dataType: 'jsonp'
     }).done(function(badges) {
-        delete badges['_links'];
-        self.setBadges(badges);
+        if (badges.subscriber !== null) {
+            that.subscriberBadge = badges.subscriber.image;
+        }
     });
 }

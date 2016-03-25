@@ -19,7 +19,7 @@ Twitch.init({clientId: clientId}, function(error, status) {
         $('.twitch-connect').click(function() {
             twitchChat.chatHandler.trackEvent('Twitch Login', 'Button');
             Twitch.login({
-                redirect_uri: baseUrl,
+                redirect_uri: location.href,
                 popup: false,
                 scope: ['user_read', 'chat_login']
             });
@@ -38,6 +38,10 @@ $(document).ready(function() {
     $('.send-chat-message').click(function() {
         twitchChat.sendMessage($('.chat-input').val(), 'Button');
     });
+
+    twitchChat.socket.on('init', function(message) {
+        twitchChat.emoticonHandler.setSubscriberBadge(message.chanelName);
+    })
 
     twitchChat.socket.on('message', function(message) {
         twitchChat.addMessage(message);

@@ -18,9 +18,7 @@ ExpressHandler.prototype.configure = function() {
 
 ExpressHandler.prototype.homeAction = function(request, response) {
     response.render('index', {
-        'baseUrl': configurations.environment.baseUrl,
-        'channelName': configurations.channelName,
-        'clientId': configurations.environment.clientId,
+        'clientId': configurations.environment.clientId
     });
 }
 

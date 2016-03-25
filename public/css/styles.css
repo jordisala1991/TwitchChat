@@ -45,8 +45,7 @@ h1 {
 }
 
 .badge {
-    background-image: url("http://www-cdn.jtvnw.net/images/xarth/g/g18_star-00000080.png");
-    background-size: 100%;
+    background-size: 100% !important;
     display: inline-block;
     vertical-align: bottom;
     height: 18px;
@@ -61,28 +60,27 @@ h1 {
 }
 
 .admin {
-    background-image: url("http://www-cdn.jtvnw.net/images/xarth/badge_admin.svg");
-    background-color: #faaf19;
+    background: #faaf19 url("https://chat-badges.s3.amazonaws.com/admin.svg");
 }
 
 .staff {
-    background-image: url("http://www-cdn.jtvnw.net/images/xarth/badge_staff.svg");
-    background-color: #200f33;
+    background: #200f33 url("https://chat-badges.s3.amazonaws.com/staff.svg");
 }
 
 .turbo {
-    background-image: url("http://www-cdn.jtvnw.net/images/xarth/badge_turbo.svg");
-    background-color: #6441a5;
+    background: #6441a5 url("https://chat-badges.s3.amazonaws.com/turbo.svg");
 }
 
 .broadcaster {
-    background-image: url("http://www-cdn.jtvnw.net/images/xarth/badge_broadcaster.svg");
-    background-color: #e71818;
+    background: #e71818 url("https://chat-badges.s3.amazonaws.com/broadcaster.svg");
 }
 
 .mod {
-    background-image: url("http://www-cdn.jtvnw.net/images/xarth/badge_mod.svg");
-    background-color: #34ae0a;
+    background: #34ae0a url("https://chat-badges.s3.amazonaws.com/mod.svg");
+}
+
+.globalmod {
+    background: #0c6f20 url("https://chat-badges.s3.amazonaws.com/globalmod.svg");
 }
 
 .twitch-connect {

@@ -1,5 +1,5 @@
 var TwitchChat = function() {
-    this.socket = io.connect(baseUrl);
+    this.socket = io.connect(location.href);
     this.templating = new Templating();
     this.chatHandler = new ChatHandler($('.chat-lines'), $('.chat-input'));
     this.emoticonHandler = new EmoticonHandler();
