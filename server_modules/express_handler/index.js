@@ -12,8 +12,6 @@ ExpressHandler.prototype.configure = function() {
 
     app.set('view engine', 'handlebars');
     app.set('cache view');
-
-    app.locals.PROD_ENV = 'production' === app.settings.env;
 }
 
 ExpressHandler.prototype.homeAction = function(request, response) {
