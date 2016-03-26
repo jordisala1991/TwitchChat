@@ -2,26 +2,28 @@ function Client(user_name, oauth) {
     this.user_name = user_name;
     this.oauth = oauth;
     this.connections = 1;
+    this.server = process.env.SERVER_NAME;
+    this.port = process.env.SERVER_PORT;
+    this.channelName = process.env.CHANNEL_NAME;
     this.connection = this.createIrcConnection();
 }
 
 Client.prototype.createIrcConnection = function() {
-    var options = {
+    var self = this;
+    var connection = api.createClient(this.user_name, {
         nick: this.user_name,
         user: this.user_name,
         realname: this.user_name,
-        server: configurations.server,
-        port: configurations.port,
+        server: this.server,
+        port: this.port,
         password: this.oauth
-    };
-
-    var connection = api.createClient(this.user_name, options);
+    });
 
     api.hookEvent(this.user_name, 'registered', function(message) {
         connection.irc.raw('CAP REQ :twitch.tv/membership');
         connection.irc.raw('CAP REQ :twitch.tv/commands');
         connection.irc.raw('CAP REQ :twitch.tv/tags');
-        connection.irc.join(configurations.channelName);
+        connection.irc.join(self.channelName);
     });
 
     api.hookEvent(this.user_name, '*', function(message) {
@@ -32,8 +34,8 @@ Client.prototype.createIrcConnection = function() {
 }
 
 Client.prototype.sendChannelMessage = function(message) {
-    if (message.lastIndexOf('/me', 0) === 0) this.connection.irc.me(configurations.channelName, message.substring(4));
-    else this.connection.irc.privmsg(configurations.channelName, message);
+    if (message.lastIndexOf('/me', 0) === 0) this.connection.irc.me(this.channelName, message.substring(4));
+    else this.connection.irc.privmsg(this.channelName, message);
 }
 
 Client.prototype.connect = function() {

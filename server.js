@@ -8,15 +8,13 @@ app = express();
 server = http.createServer(app);
 io = require('socket.io').listen(server);
 
-configurations = require('./server_modules/configurations');
-
 Client = require('./server_modules/socket_handler/client.js');
 IrcHandler = require('./server_modules/irc_handler');
 SocketHandler = require('./server_modules/socket_handler');
 
 irc_handler = new IrcHandler();
-client = new Client(configurations.botName, configurations.password);
-socket_handler = new SocketHandler(configurations.botName, configurations.channelName, configurations.clientId);
+client = new Client(process.env.BOT_USER, process.env.BOT_PASS);
+socket_handler = new SocketHandler(process.env.BOT_USER, process.env.CHANNEL_NAME, process.env.CLIENT_ID);
 
 io.on('connection', function(socket) {
     socket_handler.connection(socket);
