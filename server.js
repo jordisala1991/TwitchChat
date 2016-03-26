@@ -26,8 +26,5 @@ io.on('connection', function(socket) {
 });
 
 express_handler.configure();
-app.get('/', function(request, response) {
-    express_handler.homeAction(request, response);
-});
 
 server.listen(process.env.PORT || 5000);

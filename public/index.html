@@ -19,7 +19,18 @@
     </script>
 </head>
 <body>
-    {{{ body }}}
+    <h1>Twitch Chat</h1>
+    <img src="http://ttv-api.s3.amazonaws.com/assets/connect_dark.png" style="display:none" class="twitch-connect" href="#" />
+    <div class="content">
+        <div class="chat-lines">
+            <div class="chat-line grey">Welcome to the chat room!</div>
+        </div>
+        <div class="chat-control">
+            <textarea class="chat-input" autocomplete="off"></textarea>
+            <button class="send-chat-message">Chat</button>
+        </div>
+    </div>
+
     <script src="js/vendor.min.js"></script>
     <script src="https://ttv-api.s3.amazonaws.com/twitch.min.js"></script>
     <script src="js/script.min.js"></script>

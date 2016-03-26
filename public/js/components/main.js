@@ -1,31 +1,33 @@
 var twitchChat = new TwitchChat();
 
-Twitch.init({clientId: clientId}, function(error, status) {
-    if (error) console.log(error);
+function initializeTwitch(clientId) {
+    Twitch.init({clientId: clientId}, function(error, status) {
+        if (error) console.log(error);
 
-    if (status.authenticated) {
-        var token = Twitch.getToken();
+        if (status.authenticated) {
+            var token = Twitch.getToken();
 
-        Twitch.api({method: 'user'}, function(error, user) {
-            if (error) console.log(error);
-            twitchChat.sendCredentials(user.name, token);
-        });
-        $('.chat-input').attr('placeholder', 'Chat about this Channel');
-    }
-    else {
-        $('.chat-input').attr('placeholder', 'Sign up or log in to chat');
-        $('.chat-input').attr('disabled', 'disabled');
-        $('.twitch-connect').show();
-        $('.twitch-connect').click(function() {
-            twitchChat.chatHandler.trackEvent('Twitch Login', 'Button');
-            Twitch.login({
-                redirect_uri: location.href,
-                popup: false,
-                scope: ['user_read', 'chat_login']
+            Twitch.api({method: 'user'}, function(error, user) {
+                if (error) console.log(error);
+                twitchChat.sendCredentials(user.name, token);
             });
-        });
-    }
-});
+            $('.chat-input').attr('placeholder', 'Chat about this Channel');
+        }
+        else {
+            $('.chat-input').attr('placeholder', 'Sign up or log in to chat');
+            $('.chat-input').attr('disabled', 'disabled');
+            $('.twitch-connect').show();
+            $('.twitch-connect').click(function() {
+                twitchChat.chatHandler.trackEvent('Twitch Login', 'Button');
+                Twitch.login({
+                    redirect_uri: location.href,
+                    popup: false,
+                    scope: ['user_read', 'chat_login']
+                });
+            });
+        }
+    });
+}
 
 $(document).ready(function() {
     $('.chat-input').keypress(function(e) {
@@ -40,6 +42,7 @@ $(document).ready(function() {
     });
 
     twitchChat.socket.on('init', function(message) {
+        initializeTwitch(message.clientId);
         twitchChat.emoticonHandler.setSubscriberBadge(message.chanelName);
     })
 

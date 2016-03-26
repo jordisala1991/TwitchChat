@@ -11,7 +11,16 @@ gulp.task('styles', function() {
 });
 
 gulp.task('javascript', function() {
-    return gulp.src('public/js/components/*.js')
+    var components = [
+        'public/js/components/functions.js',
+        'public/js/components/templating.js',
+        'public/js/components/chathandler.js',
+        'public/js/components/emoticonhandler.js',
+        'public/js/components/twitchchat.js',
+        'public/js/components/main.js',
+    ];
+
+    return gulp.src(components)
         .pipe(uglify({
             'mangle': true
         }))

@@ -10,7 +10,8 @@ SocketHandler.prototype.connection = function(socket) {
     socket.join(configurations.botName + '-notice');
 
     socket.json.emit('init', {
-        'channelName': configurations.channelName
+        'channelName': configurations.channelName,
+        'clientId': configurations.clientId
     });
 
     socket.on('login', function(data) {
