@@ -7,10 +7,6 @@ module.exports = function() {
         case 'production':
             return {
                 clientId: '1uzx8xlados5eqn7sb0pexoyuzkc1g9'
-            }
-        default:
-            return {
-                clientId: '8gsoi621f4vho16c2saw2x74v4hkdf0'
-            }
+            };
     }
 };

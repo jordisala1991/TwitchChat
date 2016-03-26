@@ -1,5 +1,6 @@
 var botName = 'nodejsbot',
-    channelName = '#jordism91';
+    channelName = '#jordism91',
+    password = 'oauth:7epca7k56hdlint8u8a5yjkebv1lpx';
 
 var configurations = {
     channelName: channelName,
@@ -11,7 +12,7 @@ var configurations = {
         server: 'irc.twitch.tv',
         port: 6667,
         secure: false,
-        password: 'oauth:7epca7k56hdlint8u8a5yjkebv1lpx'
+        password: password
     },
     environment: require('./conf')()
 };
