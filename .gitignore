@@ -9,5 +9,6 @@ npm-debug.log
 bower_components
 
 # APP
-public/*.min.*
+public/css/*
+public/js/*
 .env

@@ -1,6 +1,4 @@
 * {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -123,24 +121,29 @@ h1 {
 .chat-line {
     padding: 4px 0;
     line-height: 20px;
-}
 
-.chat-line > span {
-    margin-right: 5px;
-}
+    > span {
+        margin-right: 5px;
+    }
 
-.chat-line a:link {
-    text-decoration: none;
-}
-.chat-line a:visited {
-    text-decoration: none;
-    color: blue;
-}
-.chat-line a:hover {
-    text-decoration: underline;
-}
-.chat-line a:active {
-    text-decoration: none;
+    a {
+        &:link {
+            text-decoration: none;
+        }
+
+        &:visited {
+            text-decoration: none;
+            color: blue;
+        }
+
+        &:hover {
+            text-decoration: underline;
+        }
+
+        &:active {
+            text-decoration: none;
+        }
+    }
 }
 
 .time {

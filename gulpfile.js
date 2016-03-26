@@ -1,15 +1,26 @@
-var gulp = require('gulp');
-var csso = require('gulp-csso');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
-var nodemon = require('gulp-nodemon');
-var env = require('gulp-env');
+var gulp = require('gulp'),
+    csso = require('gulp-csso'),
+    concat = require('gulp-concat'),
+    uglify = require('gulp-uglify'),
+    nodemon = require('gulp-nodemon'),
+    sass = require('gulp-sass'),
+    sourcemaps = require('gulp-sourcemaps'),
+    autoprefixer = require('gulp-autoprefixer'),
+    env = require('gulp-env');
 
 gulp.task('styles', function() {
-    return gulp.src('client/css/*.css')
+    var styles = [
+        'client/scss/**/*.scss',
+        '!client/scss/**/_*.scss'
+    ];
+
+    return gulp.src(styles)
+        .pipe(sourcemaps.init())
+        .pipe(autoprefixer('last 2 versions'))
+        .pipe(sass().on('error', sass.logError))
         .pipe(csso())
-        .pipe(concat('styles.min.css'))
-        .pipe(gulp.dest('public/'));
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest('public/css/'));
 });
 
 gulp.task('javascript', function() {
@@ -23,11 +34,13 @@ gulp.task('javascript', function() {
     ];
 
     return gulp.src(components)
+        .pipe(sourcemaps.init())
         .pipe(uglify({
             'mangle': true
         }))
-        .pipe(concat('script.min.js'))
-        .pipe(gulp.dest('public/'));
+        .pipe(concat('scripts.js'))
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest('public/js/'));
 });
 
 gulp.task('vendors', function() {
@@ -38,11 +51,13 @@ gulp.task('vendors', function() {
     ];
 
     return gulp.src(vendors)
+        .pipe(sourcemaps.init())
         .pipe(uglify({
             'mangle': true
         }))
-        .pipe(concat('vendor.min.js'))
-        .pipe(gulp.dest('public/'));
+        .pipe(concat('vendors.js'))
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest('public/js/'));
 });
 
 gulp.task('nodemon', function(callback) {
@@ -67,5 +82,5 @@ gulp.task('nodemon', function(callback) {
 gulp.task('build', ['styles', 'javascript', 'vendors']);
 
 gulp.task('default', ['build', 'nodemon'], function() {
-    gulp.watch('client/**/*.css', ['styles', 'javascript']);
+    gulp.watch('client/**/*', ['styles', 'javascript']);
 });
