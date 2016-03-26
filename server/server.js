@@ -8,9 +8,9 @@ app = express();
 server = http.createServer(app);
 io = require('socket.io').listen(server);
 
-Client = require('./server_modules/socket_handler/client.js');
-IrcHandler = require('./server_modules/irc_handler');
-SocketHandler = require('./server_modules/socket_handler');
+Client = require('./socket_handler/client.js');
+IrcHandler = require('./irc_handler');
+SocketHandler = require('./socket_handler');
 
 irc_handler = new IrcHandler();
 client = new Client(process.env.BOT_USER, process.env.BOT_PASS);
@@ -21,5 +21,5 @@ io.on('connection', function(socket) {
 });
 
 app.use(compression());
-app.use(serveStatic(__dirname + '/public', { maxAge: 86400000 }));
+app.use(serveStatic(__dirname + '/../public', { maxAge: 86400000 }));
 server.listen(process.env.PORT || 5000);

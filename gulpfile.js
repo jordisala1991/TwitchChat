@@ -54,8 +54,8 @@ gulp.task('nodemon', function(callback) {
     });
 
     nodemon({
-        script: 'server.js',
-        watch: ['.env', 'server.js', 'server_modules/']
+        script: 'server/server.js',
+        watch: ['.env', 'server/']
     }).on('start', function() {
         if (!called) {
             called = true;
