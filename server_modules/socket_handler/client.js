@@ -10,9 +10,8 @@ Client.prototype.createIrcConnection = function() {
         nick: this.user_name,
         user: this.user_name,
         realname: this.user_name,
-        server: configurations.connectionOptions.server,
-        port: configurations.connectionOptions.port,
-        secure: configurations.connectionOptions.secure,
+        server: configurations.server,
+        port: configurations.port,
         password: this.oauth
     };
 

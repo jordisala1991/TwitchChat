@@ -3,6 +3,7 @@ var csso = require('gulp-csso');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var nodemon = require('gulp-nodemon');
+var env = require('gulp-env');
 
 gulp.task('styles', function() {
     return gulp.src('public/css/*.css')
@@ -44,12 +45,28 @@ gulp.task('vendors', function() {
         .pipe(gulp.dest('public/'));
 });
 
-gulp.task('build', ['styles', 'javascript', 'vendors']);
+gulp.task('nodemon', function(callback) {
+    var called = false;
 
-gulp.task('default', ['build'], function() {
+    env({
+        file: '.env',
+        type: 'ini'
+    });
+
     nodemon({
         script: 'server.js',
-        watch: ['server.js', 'server_modules/', 'public/js/', 'public/css/'],
-        tasks: ['styles', 'javascript']
+        watch: ['.env', 'server.js', 'server_modules/']
+    }).on('start', function() {
+        if (!called) {
+            called = true;
+            callback();
+        }
     });
-})
+});
+
+gulp.task('build', ['styles', 'javascript', 'vendors']);
+
+gulp.task('default', ['build', 'nodemon'], function() {
+    gulp.watch('public/css/**/*.css', ['styles']);
+    gulp.watch('public/js/**/*.js', ['javascript']);
+});

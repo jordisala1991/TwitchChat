@@ -1,4 +1,7 @@
-function SocketHandler() {
+function SocketHandler(botName, channelName, clientId) {
+    this.botName = botName;
+    this.channelName = channelName;
+    this.clientId = clientId;
     this.clients = []
 }
 
@@ -6,18 +9,18 @@ SocketHandler.prototype.connection = function(socket) {
     var user_name,
         self = this;
 
-    socket.join(configurations.botName);
-    socket.join(configurations.botName + '-notice');
+    socket.join(self.botName);
+    socket.join(self.botName + '-notice');
 
     socket.json.emit('init', {
-        'channelName': configurations.channelName,
-        'clientId': configurations.environment.clientId
+        'channelName': self.channelName,
+        'clientId': self.clientId
     });
 
     socket.on('login', function(data) {
         user_name = data.username;
 
-        socket.leave(configurations.botName + '-notice');
+        socket.leave(self.botName + '-notice');
         socket.join(user_name + '-notice');
 
         if (user_name in self.clients) {

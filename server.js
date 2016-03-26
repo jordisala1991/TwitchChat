@@ -15,8 +15,8 @@ IrcHandler = require('./server_modules/irc_handler');
 SocketHandler = require('./server_modules/socket_handler');
 
 irc_handler = new IrcHandler();
-client = new Client(configurations.botName, configurations.connectionOptions.password);
-socket_handler = new SocketHandler();
+client = new Client(configurations.botName, configurations.password);
+socket_handler = new SocketHandler(configurations.botName, configurations.channelName, configurations.clientId);
 
 io.on('connection', function(socket) {
     socket_handler.connection(socket);
