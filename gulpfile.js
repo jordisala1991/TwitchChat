@@ -6,7 +6,7 @@ var nodemon = require('gulp-nodemon');
 var env = require('gulp-env');
 
 gulp.task('styles', function() {
-    return gulp.src('public/css/*.css')
+    return gulp.src('client/css/*.css')
         .pipe(csso())
         .pipe(concat('styles.min.css'))
         .pipe(gulp.dest('public/'));
@@ -14,12 +14,12 @@ gulp.task('styles', function() {
 
 gulp.task('javascript', function() {
     var components = [
-        'public/js/functions.js',
-        'public/js/templating.js',
-        'public/js/chathandler.js',
-        'public/js/emoticonhandler.js',
-        'public/js/twitchchat.js',
-        'public/js/main.js'
+        'client/js/functions.js',
+        'client/js/templating.js',
+        'client/js/chathandler.js',
+        'client/js/emoticonhandler.js',
+        'client/js/twitchchat.js',
+        'client/js/main.js'
     ];
 
     return gulp.src(components)
@@ -67,6 +67,5 @@ gulp.task('nodemon', function(callback) {
 gulp.task('build', ['styles', 'javascript', 'vendors']);
 
 gulp.task('default', ['build', 'nodemon'], function() {
-    gulp.watch('public/css/**/*.css', ['styles']);
-    gulp.watch('public/js/**/*.js', ['javascript']);
+    gulp.watch('client/**/*.css', ['styles', 'javascript']);
 });
