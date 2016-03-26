@@ -20,8 +20,6 @@ function initializeTwitch(clientId) {
             $('.twitch-connect').click(function() {
                 twitchChat.chatHandler.trackEvent('Twitch Login', 'Button');
                 Twitch.login({
-                    redirect_uri: location.href,
-                    popup: false,
                     scope: ['user_read', 'chat_login']
                 });
             });
@@ -43,7 +41,7 @@ $(document).ready(function() {
 
     twitchChat.socket.on('init', function(message) {
         initializeTwitch(message.clientId);
-        twitchChat.emoticonHandler.setSubscriberBadge(message.chanelName);
+        twitchChat.emoticonHandler.setSubscriberBadge(message.channelName);
     })
 
     twitchChat.socket.on('message', function(message) {

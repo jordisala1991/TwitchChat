@@ -2,22 +2,23 @@ var gulp = require('gulp');
 var csso = require('gulp-csso');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
+var nodemon = require('gulp-nodemon');
 
 gulp.task('styles', function() {
     return gulp.src('public/css/*.css')
         .pipe(csso())
         .pipe(concat('styles.min.css'))
-        .pipe(gulp.dest('public/css/dest/'));
+        .pipe(gulp.dest('public/'));
 });
 
 gulp.task('javascript', function() {
     var components = [
-        'public/js/components/functions.js',
-        'public/js/components/templating.js',
-        'public/js/components/chathandler.js',
-        'public/js/components/emoticonhandler.js',
-        'public/js/components/twitchchat.js',
-        'public/js/components/main.js',
+        'public/js/functions.js',
+        'public/js/templating.js',
+        'public/js/chathandler.js',
+        'public/js/emoticonhandler.js',
+        'public/js/twitchchat.js',
+        'public/js/main.js'
     ];
 
     return gulp.src(components)
@@ -25,7 +26,7 @@ gulp.task('javascript', function() {
             'mangle': true
         }))
         .pipe(concat('script.min.js'))
-        .pipe(gulp.dest('public/js/'));
+        .pipe(gulp.dest('public/'));
 });
 
 gulp.task('vendors', function() {
@@ -40,10 +41,13 @@ gulp.task('vendors', function() {
             'mangle': true
         }))
         .pipe(concat('vendor.min.js'))
-        .pipe(gulp.dest('public/js/'));
+        .pipe(gulp.dest('public/'));
 });
 
 gulp.task('default', ['styles', 'javascript', 'vendors'], function() {
-    gulp.watch('public/css/*.css', ['styles']);
-    gulp.watch('public/js/components/*.js', ['javascript']);
-});
+    nodemon({
+        script: 'server.js',
+        watch: ['server.js', 'server_modules/', 'public/js/', 'public/css/'],
+        tasks: ['styles', 'javascript']
+    });
+})

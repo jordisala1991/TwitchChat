@@ -1,4 +1,3 @@
-exphbs = require('express-handlebars');
 factory = require('irc-factory');
 api = new factory.Api();
 express = require('express');

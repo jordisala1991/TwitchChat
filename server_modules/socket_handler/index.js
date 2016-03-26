@@ -11,7 +11,7 @@ SocketHandler.prototype.connection = function(socket) {
 
     socket.json.emit('init', {
         'channelName': configurations.channelName,
-        'clientId': configurations.clientId
+        'clientId': configurations.environment.clientId
     });
 
     socket.on('login', function(data) {
