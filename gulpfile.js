@@ -44,7 +44,9 @@ gulp.task('vendors', function() {
         .pipe(gulp.dest('public/'));
 });
 
-gulp.task('default', ['styles', 'javascript', 'vendors'], function() {
+gulp.task('build', ['styles', 'javascript', 'vendors']);
+
+gulp.task('default', ['build'], function() {
     nodemon({
         script: 'server.js',
         watch: ['server.js', 'server_modules/', 'public/js/', 'public/css/'],

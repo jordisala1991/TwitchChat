@@ -1,3 +1,12 @@
+# OS FILES
 .DS_Store
+
+# NPM
 node_modules
+npm-debug.log
+
+# BOWER
 bower_components
+
+# APP
+public/*.min.*

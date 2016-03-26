@@ -22,5 +22,9 @@
     "repository": {},
     "engines": {
         "node": "4.2.3"
+    },
+    "scripts": {
+        "postinstall": "bower install && gulp build",
+        "start": "node server.js"
     }
 }
