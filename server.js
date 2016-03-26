@@ -13,17 +13,15 @@ configurations = require('./server_modules/configurations');
 Client = require('./server_modules/socket_handler/client.js');
 IrcHandler = require('./server_modules/irc_handler');
 SocketHandler = require('./server_modules/socket_handler');
-ExpressHandler = require('./server_modules/express_handler');
 
 irc_handler = new IrcHandler();
 client = new Client(configurations.botName, configurations.connectionOptions.password);
 socket_handler = new SocketHandler();
-express_handler = new ExpressHandler();
 
 io.on('connection', function(socket) {
     socket_handler.connection(socket);
 });
 
-express_handler.configure();
-
+app.use(compression());
+app.use(serveStatic(__dirname + '/public', { maxAge: 86400000 }));
 server.listen(process.env.PORT || 5000);
