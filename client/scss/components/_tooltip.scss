@@ -1,0 +1,31 @@
+.tooltip {
+    position: relative;
+
+    &:hover {
+        &:after {
+            content: attr(data-tooltip-name);
+            position: absolute;
+                top: 32px;
+                left: calc(-50% + 7px);
+            background: #2f2f2f;
+            color: #fff;
+            padding: 5px 10px;
+            z-index: 2;
+            opacity: 0.9;
+        }
+
+        &:before {
+            content: '';
+            position: absolute;
+                top: 25px;
+                left: calc(50% - 7px);
+            width: 0px;
+            height: 0px;
+            z-index: 2;
+            background-clip: padding-box;
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-bottom: 7px solid rgba(47, 47, 47, 0.9);
+        }
+    }
+}

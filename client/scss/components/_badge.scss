@@ -1,0 +1,36 @@
+.badge {
+    height: 18px;
+    min-width: 18px;
+    display: inline-block;
+    vertical-align: middle;
+
+    &.admin {
+        background: #faaf19 url("https://web-cdn.ttvnw.net/images/xarth/badge_admin.svg");
+        background-size: 100%;
+    }
+
+    &.staff {
+        background: #200f33 url("https://web-cdn.ttvnw.net/images/xarth/badge_staff.svg");
+        background-size: 100%;
+    }
+
+    &.turbo {
+        background: #6441a5 url("https://web-cdn.ttvnw.net/images/xarth/badge_turbo.svg");
+        background-size: 100%;
+    }
+
+    &.broadcaster {
+        background: #e71818 url("https://web-cdn.ttvnw.net/images/xarth/badge_broadcaster.svg");
+        background-size: 100%;
+    }
+
+    &.mod {
+        background: #34ae0a url("https://web-cdn.ttvnw.net/images/xarth/badge_mod.svg");
+        background-size: 100%;
+    }
+
+    &.global_mod {
+        background: #0c6f20 url("https://web-cdn.ttvnw.net/images/xarth/badge_globalmod.svg");
+        background-size: 100%;
+    }
+}

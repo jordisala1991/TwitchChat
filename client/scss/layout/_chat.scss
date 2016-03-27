@@ -22,62 +22,10 @@ h1 {
     height: 600px;
 }
 
-.grey {
-    color: #666;
-}
-
-.black {
-    color: #333;
-}
-
-.green {
-    color: #008C00;
-}
-
-.blue {
-    color: blue;
-}
-
-.red {
-    color: orangered;
-}
-
-.badge {
-    background-size: 100% !important;
-    display: inline-block;
-    vertical-align: bottom;
-    height: 18px;
-    min-width: 18px;
-}
-
 .emoticon {
     display: inline-block;
     vertical-align: middle;
     margin: -5px 0;
-}
-
-.admin {
-    background: #faaf19 url("https://web-cdn.ttvnw.net/images/xarth/badge_admin.svg");
-}
-
-.staff {
-    background: #200f33 url("https://web-cdn.ttvnw.net/images/xarth/badge_staff.svg");
-}
-
-.turbo {
-    background: #6441a5 url("https://web-cdn.ttvnw.net/images/xarth/badge_turbo.svg");
-}
-
-.broadcaster {
-    background: #e71818 url("https://web-cdn.ttvnw.net/images/xarth/badge_broadcaster.svg");
-}
-
-.mod {
-    background: #34ae0a url("https://web-cdn.ttvnw.net/images/xarth/badge_mod.svg");
-}
-
-.global_mod {
-    background: #0c6f20 url("https://web-cdn.ttvnw.net/images/xarth/badge_globalmod.svg");
 }
 
 .twitch-connect {
@@ -85,26 +33,52 @@ h1 {
     cursor: pointer;
 }
 
-.chat-input {
-    margin: 10px 15px;
-    height: 75%;
-    width: 85%;
-    padding: 7px;
-    resize: none;
-    border: 1px solid rgba(0, 0, 0, 0.35);
-}
-
-.send-chat-message {
-    height: 75%;
-    width: 10%;
-    margin: 10px 15px 0 0;
-    vertical-align: top;
-}
-
 .chat-lines {
     padding: 10px;
     overflow: auto;
-    height: 85%
+    height: 85%;
+
+    .chat-line {
+        padding: 6px 0;
+        line-height: 20px;
+        word-wrap: break-word;
+        line-height: 20px;
+
+        &.grey {
+            color: #666;
+        }
+
+        > span {
+            margin-right: 5px;
+        }
+
+        a {
+            &:link {
+                text-decoration: none;
+            }
+
+            &:visited {
+                text-decoration: none;
+                color: blue;
+            }
+
+            &:hover {
+                text-decoration: underline;
+            }
+
+            &:active {
+                text-decoration: none;
+            }
+        }
+
+        .time {
+            color: #8c8c8c;
+        }
+
+        .user-name {
+            font-weight: bold;
+        }
+    }
 }
 
 .chat-control {
@@ -112,44 +86,22 @@ h1 {
     width: 100%;
     border-top: 1px solid #999;
     background-color: #e5e5e5;
-}
 
-.chat-line {
-    padding: 6px 0;
-    line-height: 20px;
-    word-wrap: break-word;
-    line-height: 20px;
-
-    > span {
-        margin-right: 5px;
+    .chat-input {
+        margin: 10px 15px;
+        height: 75%;
+        width: 85%;
+        padding: 7px;
+        resize: none;
+        border: 1px solid rgba(0, 0, 0, 0.35);
     }
 
-    a {
-        &:link {
-            text-decoration: none;
-        }
-
-        &:visited {
-            text-decoration: none;
-            color: blue;
-        }
-
-        &:hover {
-            text-decoration: underline;
-        }
-
-        &:active {
-            text-decoration: none;
-        }
+    .send-chat-message {
+        height: 75%;
+        width: 10%;
+        margin: 10px 15px 0 0;
+        vertical-align: top;
     }
-}
-
-.time {
-    color: #8c8c8c;
-}
-
-.user-name {
-    font-weight: bold;
 }
 
 .more-messages {
@@ -163,36 +115,4 @@ h1 {
     opacity: 0.9;
     color: #fff;
     text-decoration: none;
-}
-
-.tooltip {
-    position: relative;
-
-    &:hover {
-        &:after {
-            content: attr(data-tooltip-name);
-            position: absolute;
-                top: 32px;
-                left: calc(-50% + 7px);
-            background: #2f2f2f;
-            color: #fff;
-            padding: 5px 10px;
-            z-index: 2;
-            opacity: 0.9;
-        }
-
-        &:before {
-            content: '';
-            position: absolute;
-                top: 25px;
-                left: calc(50% - 7px);
-            width: 0px;
-            height: 0px;
-            z-index: 2;
-            background-clip: padding-box;
-            border-left: 7px solid transparent;
-            border-right: 7px solid transparent;
-            border-bottom: 7px solid rgba(47, 47, 47, 0.9);
-        }
-    }
 }
