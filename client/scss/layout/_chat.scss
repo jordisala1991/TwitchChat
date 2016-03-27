@@ -97,11 +97,10 @@ h1 {
 }
 
 .send-chat-message {
-    position: absolute;
     height: 75%;
     width: 10%;
-    margin: 10px 15px;
-    right: 0;
+    margin: 10px 15px 0 0;
+    vertical-align: top;
 }
 
 .chat-lines {
@@ -114,8 +113,6 @@ h1 {
     height: 15%;
     width: 100%;
     border-top: 1px solid #999;
-    position: absolute;
-    bottom: 0;
     background-color: #e5e5e5;
 }
 
@@ -193,7 +190,7 @@ h1 {
             background-clip: padding-box;
             border-left: 7px solid transparent;
             border-right: 7px solid transparent;
-            border-bottom: 7px solid rgba(18, 18, 18, 0.8);
+            border-bottom: 7px solid rgba(47, 47, 47, 0.9);
         }
     }
 }
