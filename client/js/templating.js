@@ -32,34 +32,37 @@ Templating.prototype.messageTemplating = function(message) {
     return template;
 }
 
-Templating.prototype.emoticonTemplating = function(emoticon_id) {
-    var emoticon_template =
-        '<span class="emoticon" style="' +
+Templating.prototype.emoticonTemplating = function(id, name) {
+    var template =
+        '<span class="emoticon tooltip" data-tooltip-name="{NAME}" style="' +
             'background-image: url(//static-cdn.jtvnw.net/emoticons/v1/{ID}/1.0); ' +
             'height: 24px; ' +
             'width: 24px; ' +
             'margin: -5px 0px;">' +
         '</span>';
 
-    return emoticon_template.replace("{ID}", emoticon_id);
+    template = template.replace("{ID}", id);
+    template = template.replace("{NAME}", name);
+
+    return template;
 }
 
-Templating.prototype.subscriberTemplating = function(imageUrl) {
-    var badgeTemplate =
+Templating.prototype.subscriberTemplating = function(url) {
+    var template =
         '<span class="badge" style="' +
             'background-image: url({BACKGROUND_IMAGE});">' +
         '</span>';
 
-    badgeTemplate = badgeTemplate.replace("{BACKGROUND_IMAGE}", imageUrl);
+    template = template.replace("{BACKGROUND_IMAGE}", url);
 
-    return badgeTemplate;
+    return template;
 }
 
 Templating.prototype.badgeTemplating = function(badge) {
-    var badgeTemplate =
+    var template =
         '<span class="badge {BADGE}"></span>';
 
-    badgeTemplate = badgeTemplate.replace("{BADGE}", badge);
+    template = template.replace("{BADGE}", badge);
 
-    return badgeTemplate;
+    return template;
 }

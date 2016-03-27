@@ -28,10 +28,25 @@ function initializeTwitch(clientId) {
 }
 
 $(document).ready(function() {
-    $('.chat-input').keypress(function(e) {
-        if (e.which == 13) {
+    $('.chat-input').keypress(function(event) {
+        if (event.which == 13) {
             twitchChat.sendMessage($('.chat-input').val(), 'Keyboard');
-            e.preventDefault();
+            event.preventDefault();
+        }
+    });
+
+    $('.more-messages').click(function(event) {
+        event.preventDefault();
+        twitchChat.chatHandler.scrollDown();
+    });
+
+    $('.chat-lines').scroll(function(event) {
+        event.preventDefault();
+
+        if (twitchChat.chatHandler.isScrolledToBottom()) {
+            $('.more-messages').hide();
+        } else {
+            $('.more-messages').show();
         }
     });
 
