@@ -173,7 +173,7 @@ h1 {
             content: attr(data-tooltip-name);
             position: absolute;
                 top: 32px;
-                left: -12px;
+                left: calc(-50% + 7px);
             background: #2f2f2f;
             color: #fff;
             padding: 5px 10px;
@@ -185,7 +185,7 @@ h1 {
             content: '';
             position: absolute;
                 top: 25px;
-                left: 6px;
+                left: calc(50% - 7px);
             width: 0px;
             height: 0px;
             z-index: 2;
