@@ -51,11 +51,9 @@ h1 {
 }
 
 .emoticon {
-    background-position: center center;
-    background-repeat: no-repeat;
     display: inline-block;
-    vertical-align: bottom;
-    position: relative;
+    vertical-align: middle;
+    margin: -5px 0;
 }
 
 .admin {
@@ -117,7 +115,9 @@ h1 {
 }
 
 .chat-line {
-    padding: 4px 0;
+    padding: 6px 0;
+    line-height: 20px;
+    word-wrap: break-word;
     line-height: 20px;
 
     > span {
@@ -166,12 +166,14 @@ h1 {
 }
 
 .tooltip {
+    position: relative;
+
     &:hover {
         &:after {
             content: attr(data-tooltip-name);
             position: absolute;
                 top: 32px;
-                left: -14px;
+                left: -12px;
             background: #2f2f2f;
             color: #fff;
             padding: 5px 10px;
