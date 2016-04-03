@@ -22,4 +22,5 @@ io.on('connection', function(socket) {
 
 app.use(compression());
 app.use(serveStatic(__dirname + '/../public', { maxAge: 86400000 }));
-server.listen(process.env.PORT || 5000);
+
+server.listen(process.env.PORT);
